@@ -379,6 +379,36 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 .cta{box-sizing:border-box;height:3rem;min-width:13.5rem;padding:0 1.4rem;justify-content:center;white-space:nowrap;font-size:var(--s);line-height:1}
 .join .cta,.sticky .cta{height:3rem;padding:0 1.4rem}
 @media(max-width:700px){.cta{min-width:0}header .cta{min-width:0;height:2.6rem}}
+/* ===== мобилка (по фидбэку Сергея): без фиксированной обрезанной Альтухи, поза внутри каждого слайда целиком,
+   на первом экране — Альтуха в круге с иконками сервисов, плотнее отступы, фон на всю высоту экрана с адресной строкой ===== */
+#hex,#nodes,.backdrop{height:100vh;height:100lvh}
+.mpose,.mhero{display:none}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@keyframes counter{to{transform:rotate(-360deg)}}
+@media(max-width:760px){
+  .mascot,.toys{display:none!important}
+  .slide{min-height:0;padding-block:3.2rem}
+  section{padding-block:3.2rem}
+  .hero{padding-block:1.5rem 3rem}
+  .one{max-width:none}
+  .mpose{display:block;margin:1.4rem auto 0;width:100%;text-align:center}
+  .mpose img{display:inline-block;height:auto;max-height:46vh;width:auto;max-width:78vw;animation:bob 4.5s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(0,0,0,.4))}
+  .mhero{display:grid;place-items:center;position:relative;width:min(16rem,66vw);aspect-ratio:1;margin:0 auto 1.6rem}
+  .mhero .disc{width:78%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:url(assets/poses-trim/phone.webp) 50% 6%/150% auto no-repeat,radial-gradient(circle at 50% 30%,#6b57f6,#141540 72%);
+    box-shadow:0 0 0 2px #d1f931,0 0 0 9px rgba(209,249,49,.12),0 20px 50px rgba(107,87,246,.55);animation:bob 4.5s ease-in-out infinite}
+  .mhero .ring{position:absolute;inset:0;animation:orbit 22s linear infinite}
+  .mhero .ring i{position:absolute;width:2.6rem;height:2.6rem;border-radius:28%;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.35);animation:counter 22s linear infinite}
+  .mhero .ring i svg{width:58%;height:58%}
+  .mhero .ring i:nth-child(1){top:-2%;left:50%;margin-left:-1.3rem;background:linear-gradient(160deg,#ff9a3c,#ff5e3a)}
+  .mhero .ring i:nth-child(2){top:50%;right:-4%;margin-top:-1.3rem;background:#000}
+  .mhero .ring i:nth-child(3){bottom:-2%;left:50%;margin-left:-1.3rem;background:#25D366}
+  .mhero .ring i:nth-child(4){top:50%;left:-4%;margin-top:-1.3rem;background:#fff}
+  .usp{max-width:none;width:100%}
+  #card .wrap{padding-inline:var(--pad)}
+  .applist{gap:1.1rem 1rem;padding:1.2rem}
+}
+@media(prefers-reduced-motion:reduce){.mpose img,.mhero .disc,.mhero .ring,.mhero .ring i{animation:none}}
 </style>
 <!-- PostHog: pageviews only on yo.finance (no autocapture, no recordings); URLs are sent without query and hash. -->
 <script>
@@ -423,6 +453,12 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 <div class="hud" aria-hidden="true"><span class="mono st"><i></i>Task done</span><span class="mono st lime">Court 2 at 7:00 · ride at 6:35 ✓</span></div>
 <div class="wrap">
   <div class="hero-txt">
+    <div class="mhero" aria-hidden="true"><div class="disc"></div><div class="ring">
+      <i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><ellipse cx="13" cy="9" rx="6" ry="6.5"/><path d="M8.8 13.6 4 19.5"/></svg></i>
+      <i><svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16v-4.5L7 7h10l2 4.5V16"/><path d="M4 12h16"/><circle cx="8" cy="16" r="1.6"/><circle cx="16" cy="16" r="1.6"/></svg></i>
+      <i><svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4c4.8 0 8 3 8 7s-3.2 7-8 7c-1 0-2-.1-2.9-.4L5 19l1-3.2C4.7 14.6 4 12.9 4 11c0-4 3.2-7 8-7z"/></svg></i>
+      <i><svg viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></i>
+    </div></div>
     <p class="mono k dot">YO:Altgirl · invite only</p>
     <h1><span class="box">Less apps,</span><br><span class="hl"><span>more life.</span></span></h1>
     
@@ -660,7 +696,7 @@ const FORM_ENDPOINT = "";
 })();
 </script><script>
 /* смена позы по экранам: прелоад, поворот из трёх кадров, затем поза секции */
-(function(){
+(function(){if(matchMedia('(max-width:760px)').matches)return;
   var A='assets/poses-trim/',F={'wave-phone':1,'turn-01':1,'turn-03':1,'turn-04':1,'run':.9,'sit':.8,'squat':.6,'squat-full':.62,'padel':.62,'phone':.62,'reach':.46},CUT={padel:1,phone:1,reach:1},img=document.getElementById('pose'),cur='phone',busy=0,want=null;
   function size(n){var m=innerWidth<1000;img.style.setProperty('--h',m?'62vw':'90vh');img.style.setProperty('--mb','0');img.style.maxWidth=n==='reach'?(m?'60vw':'46vw'):(m?'40vw':'38vw')}size('phone');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,SPIN=['turn-03','turn-04','turn-01'];
@@ -716,6 +752,15 @@ const FORM_ENDPOINT = "";
  document.addEventListener('mouseleave',function(){mx=my=-1e4});
 })();
 </script>
-<script src="assets/hex.js?v=9"></script>
+<script src="assets/hex.js?v=10"></script>
+<script>
+/* мобилка: поза каждой секции внутри слайда, целиком, без смены на лету (нет рывков при скролле) */
+(function(){if(!matchMedia('(max-width:760px)').matches)return;
+ var FULL={padel:'turn-01',phone:'wave-phone',reach:'wave-phone'};
+ document.querySelectorAll('section[data-pose]').forEach(function(s){var n=s.dataset.pose;if(n==='none'||s.classList.contains('hero')||s.id==='card')return;
+  n=FULL[n]||n;var box=s.querySelector('.one')||s.querySelector('.wrap');if(!box)return;
+  var f=document.createElement('div');f.className='mpose';f.innerHTML='<img src="assets/poses-trim/'+n+'.webp" alt="" loading="lazy">';box.appendChild(f)});
+})();
+</script>
 </body>
 </html>
