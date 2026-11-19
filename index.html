@@ -393,7 +393,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
   .hero{padding-block:1.5rem 3rem}
   .one{max-width:none}
   .mpose{display:block;margin:1.4rem auto 0;width:100%;text-align:center}
-  .mpose img{display:inline-block;height:auto;max-height:46vh;width:auto;max-width:78vw;animation:bob 4.5s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(0,0,0,.4))}
+  .mpose img{display:inline-block;height:auto;max-height:34vh;width:auto;max-width:78vw;animation:bob 4.5s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(0,0,0,.4))}
   .mhero{display:grid;place-items:center;position:relative;width:min(16rem,66vw);aspect-ratio:1;margin:0 auto 1.6rem}
   .mhero .disc{width:78%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:url(assets/poses-trim/phone.webp) 50% 6%/150% auto no-repeat,radial-gradient(circle at 50% 30%,#6b57f6,#141540 72%);
     box-shadow:0 0 0 2px #d1f931,0 0 0 9px rgba(209,249,49,.12),0 20px 50px rgba(107,87,246,.55);animation:bob 4.5s ease-in-out infinite}
@@ -405,6 +405,9 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
   .mhero .ring i:nth-child(3){bottom:-2%;left:50%;margin-left:-1.3rem;background:#25D366}
   .mhero .ring i:nth-child(4){top:50%;left:-4%;margin-top:-1.3rem;background:#fff}
   .usp{max-width:none;width:100%}
+  #card{flex-direction:column;align-items:stretch}
+  #card .handcard{margin:0 auto 1.2rem;width:min(17rem,72vw)}
+  #card .wrap{width:100%}
   #card .wrap{padding-inline:var(--pad)}
   .applist{gap:1.1rem 1rem;padding:1.2rem}
 }
@@ -757,7 +760,7 @@ const FORM_ENDPOINT = "";
 /* мобилка: поза каждой секции внутри слайда, целиком, без смены на лету (нет рывков при скролле) */
 (function(){if(!matchMedia('(max-width:760px)').matches)return;
  var FULL={padel:'turn-01',phone:'wave-phone',reach:'wave-phone'};
- document.querySelectorAll('section[data-pose]').forEach(function(s){var n=s.dataset.pose;if(n==='none'||s.classList.contains('hero')||s.id==='card')return;
+ document.querySelectorAll('section[data-pose]').forEach(function(s){var n=s.dataset.pose;if(n==='none'||s.classList.contains('hero')||s.id==='card'||s.id==='faq'||s.querySelector('.phone,.applist,.steps-shot,.usual'))return;
   n=FULL[n]||n;var box=s.querySelector('.one')||s.querySelector('.wrap');if(!box)return;
   var f=document.createElement('div');f.className='mpose';f.innerHTML='<img src="assets/poses-trim/'+n+'.webp" alt="" loading="lazy">';box.appendChild(f)});
 })();
