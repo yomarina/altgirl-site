@@ -344,6 +344,13 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 .u-me{justify-self:end;background:var(--lime);color:var(--bg);padding:.6rem .9rem;border-radius:1rem 1rem .3rem 1rem;font-size:.95rem;font-weight:500}
 .u-ok{display:flex;gap:.6rem;align-items:center;padding:.7rem .8rem;border:1px solid rgba(107,87,246,.6);border-radius:.8rem;font-size:.85rem;color:var(--dim)}
 .u-ok i{font-style:normal;width:1.4rem;height:1.4rem;border-radius:50%;background:var(--lime);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
+/* общий элемент двух сайтов: переключатель семьи YO — одинаковый на Labs и Altgirl */
+.fam{display:inline-flex;align-items:center;gap:2px;padding:3px;background:#141540;border:1px solid rgba(233,229,255,.22);font:500 .7rem/1 "Geist Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.fam a{padding:.42rem .6rem;color:rgba(246,247,251,.62);text-decoration:none}
+.fam a:hover{color:#f6f7fb}
+.fam a.on{background:#d1f931;color:#141540}
+.fam b{color:#d1f931;font-weight:500;padding:0 .35rem 0 .45rem}
+@media(max-width:560px){.fam b{display:none}}
 </style>
 <!-- PostHog: pageviews only on yo.finance (no autocapture, no recordings); URLs are sent without query and hash. -->
 <script>
@@ -377,7 +384,8 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 </div>
 
 <header><div class="wrap">
-  <a href="#top" aria-label="YO:Labs"><span class="mark"></span></a>
+  <a href="#top" aria-label="YO:Altgirl"><span class="mark"></span></a>
+  <nav class="fam" aria-label="YO family"><b>YO</b><a href="https://yomarina.github.io/yo-labs-site/">Labs</a><a href="https://yomarina.github.io/altgirl-site/" class="on" aria-current="page">Altgirl</a></nav>
   <a class="launch mono" href="https://altgirl.yo.finance">Launch app</a>
   <nav class="mono"><a href="#chat">One chat</a><a href="#card">Card</a><a href="#faq">FAQ</a></nav>
   <a class="cta" href="#join">:: Get in</a>
@@ -587,8 +595,8 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 </div></section>
 
 <footer><div class="wrap">
-  <p class="mono faint">YO:Labs © 2026 · Less apps, more life.</p>
-  <p class="fine">YO:Labs is a lab building agents, reputation and payments that work together. Altgirl is our first product. <a href="https://x.com/yo_altgirl">X</a> · <a href="https://t.me/yo_altgirl">Telegram</a></p>
+  <p class="mono faint">Altgirl is made by <a href="https://yomarina.github.io/yo-labs-site/">YO:Labs ↗</a> · Less apps, more life.</p>
+  <p class="fine">YO:Labs is a lab building agents, reputation and payments that work together. Altgirl is our first product. <a href="https://yomarina.github.io/yo-labs-site/">About the lab</a> · <a href="https://x.com/yo_altgirl">X</a> · <a href="https://t.me/yo_altgirl">Telegram</a></p>
   <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
 </div></footer>
 
