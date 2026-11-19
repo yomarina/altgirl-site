@@ -98,10 +98,12 @@ header nav a{color:var(--dim)} header nav a:hover{color:var(--lime)}
 .fine{font-size:var(--s);color:var(--faint)}
 
 /* problem */
-.prob .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
-.applist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
-.applist div{aspect-ratio:1;display:grid;place-items:center;text-align:center;color:var(--faint);position:relative;padding:.5rem;font-family:var(--mono);font-size:var(--s);text-transform:uppercase}
-.applist i{position:absolute;top:.5rem;right:.5rem;background:#ff4d6d;color:#fff;font:600 .7rem/1 var(--sans);font-style:normal;border-radius:999px;padding:.25rem .45rem}
+.prob .wrap{display:grid;grid-template-columns:auto auto;justify-content:start;gap:clamp(2rem,5vw,5rem);align-items:center}
+.applist{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,auto);gap:1.6rem 1.8rem;padding:1.8rem 2rem;border-radius:2rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.applist .app{display:flex;flex-direction:column;align-items:center;gap:.5rem;color:rgba(255,255,255,.85);font:500 .9rem/1.2 var(--sans);text-align:center}
+.applist .ico{width:clamp(64px,7.4vw,104px);aspect-ratio:1;border-radius:23%;display:grid;place-items:center;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.applist .ico svg{width:60%;height:60%}
+.applist .ico.big svg{width:78%;height:78%}
 .prob .pose{position:absolute;right:2%;bottom:-2rem;height:14rem;width:auto;opacity:.95;pointer-events:none}
 @media(max-width:860px){.prob .wrap{grid-template-columns:1fr}.prob .pose{display:none}}
 
@@ -169,7 +171,7 @@ section,header,footer{position:relative;z-index:2}
   .hero .wrap{grid-template-columns:1fr}
   .hero-pic{position:absolute;right:max(1rem,3vw);top:3rem;min-height:0;width:min(21rem,28vw)}
   .hero-pic .bub.a{position:static}
-  .prob .wrap,.cardsec .wrap{grid-template-columns:1fr 1fr}
+  .cardsec .wrap{grid-template-columns:1fr 1fr}
   .final .wrap{justify-items:start;text-align:left}
 }
 @media(max-width:999px){
@@ -323,7 +325,7 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 .handcard{position:fixed;right:30vw;top:26vh;width:min(19rem,22vw);z-index:1;pointer-events:none;opacity:0;transform:translateY(20px) rotate(4deg);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}
 .handcard.on{opacity:1;transform:none}
 .handcard .glasswrap{width:100%;margin:0}
-@media(max-width:999px){.handcard{display:none}}
+@media(max-width:999px){.handcard{position:static;width:min(20rem,78vw);margin:0 auto 1.5rem;opacity:1;transform:rotate(-3deg)}}
 
 .errands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;max-width:38rem}
 .errands .panel{display:grid;gap:.35rem;padding:1rem;align-content:start}
@@ -377,8 +379,8 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 <header><div class="wrap">
   <a href="#top" aria-label="YO:Labs"><span class="mark"></span></a>
   <a class="launch mono" href="https://altgirl.yo.finance">Launch app</a>
-  <nav class="mono"><a href="#chat">One chat</a><a href="card.html">Card</a><a href="#faq">FAQ</a></nav>
-  <a class="cta" href="#join">:: Get in line</a>
+  <nav class="mono"><a href="#chat">One chat</a><a href="#card">Card</a><a href="#faq">FAQ</a></nav>
+  <a class="cta" href="#join">:: Get in</a>
 </div></header>
 
 <!-- 1. что это -->
@@ -389,9 +391,9 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <p class="mono k dot">YO:Altgirl · invite only</p>
     <h1><span class="box">Less apps,</span><br><span class="hl"><span>more life.</span></span></h1>
     
-    <p class="lead"><b>Altgirl is an app with an AI assistant that gets things done for you in a new city.</b> She reserves a padel court, calls a ride, orders food and remembers what matters. One chat instead of a dozen apps.</p>
-    <p class="lead" style="font-size:1rem">Invite only. No code? Reserve the card and you’re in today.</p>
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap"><a class="cta solid" href="#join">Join the waitlist ↓</a><a class="cta" href="#chat">See how it works</a></div>
+    <p class="lead"><b>One chat for life in a new city.</b> She books the court, calls the ride and remembers the rest.</p>
+    <p class="lead" style="font-size:1rem">Invite only. No code? Reserve the card and get in today.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap"><a class="cta solid" href="#join">Get in ↓</a><a class="cta" href="#chat">See how it works</a></div>
   </div>
 </div></section>
 
@@ -401,7 +403,6 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <p class="mono k dot">Not another chatbot</p>
     <h2>ChatGPT for work. <span class="hl"><span>Altgirl for life.</span></span></h2>
     <p class="oneapp">Your one app to get things done.</p>
-    <p class="dim">Keep your chatbot for work. When you close the laptop, she takes over.</p>
   </div>
 </div></section>
 
@@ -413,8 +414,12 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <h2>Six apps to get to <span class="hl"><span>one padel game.</span></span></h2>
   </div>
   <div class="applist" aria-label="Apps you juggle today">
-    <div class="panel">Courts<i>3</i></div><div class="panel">Group chat<i>47</i></div><div class="panel">Ride</div>
-    <div class="panel">Weather</div><div class="panel">Calendar<i>2</i></div><div class="panel">Reminders<i>5</i></div>
+    <div class="app"><span class="ico" style="background:linear-gradient(160deg,#ff9a3c,#ff5e3a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><ellipse cx="13" cy="9" rx="6" ry="6.5"/><path d="M8.8 13.6 4 19.5"/><circle cx="11" cy="7.5" r=".9" fill="#fff" stroke="none"/><circle cx="14.5" cy="7.5" r=".9" fill="#fff" stroke="none"/><circle cx="12.7" cy="10.8" r=".9" fill="#fff" stroke="none"/><circle cx="19.5" cy="19" r="1.6" fill="#d1f931" stroke="none"/></svg></span><span>Courts</span></div>
+    <div class="app"><span class="ico" style="background:#25D366"><svg viewBox="0 0 24 24"><path fill="#fff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span><span>Group chat</span></div>
+    <div class="app"><span class="ico" style="background:#000"><svg viewBox="0 0 24 24"><path fill="#fff" d="M0 7.97v4.958c0 1.867 1.302 3.101 3 3.101.826 0 1.562-.316 2.094-.87v.736H6.27V7.97H5.082v4.888c0 1.257-.85 2.106-1.947 2.106-1.11 0-1.946-.827-1.946-2.106V7.971H0zm7.44 0v7.925h1.13v-.725c.521.532 1.257.86 2.06.86a3.006 3.006 0 0 0 3.034-3.01 3.01 3.01 0 0 0-3.033-3.024 2.86 2.86 0 0 0-2.049.861V7.971H7.439zm9.869 2.038c-1.687 0-2.965 1.37-2.965 3 0 1.72 1.334 3.01 3.066 3.01 1.053 0 1.913-.463 2.49-1.233l-.826-.611c-.43.577-.996.847-1.664.847-.973 0-1.753-.7-1.912-1.64h4.697v-.373c0-1.72-1.222-3-2.886-3zm6.295.068c-.634 0-1.098.294-1.381.758v-.713h-1.131v5.774h1.142V12.61c0-.894.544-1.47 1.291-1.47H24v-1.065h-.396zm-6.319.928c.85 0 1.564.588 1.756 1.47H15.52c.203-.882.916-1.47 1.765-1.47zm-6.732.012c1.086 0 1.98.883 1.98 2.004a1.993 1.993 0 0 1-1.98 2.001A1.989 1.989 0 0 1 8.56 13.02a1.99 1.99 0 0 1 1.992-2.004z"/></svg></span><span>Ride</span></div>
+    <div class="app"><span class="ico big" style="background:linear-gradient(160deg,#4fb2ff,#1d6cf2)"><svg viewBox="0 0 24 24"><circle cx="9.5" cy="9" r="3.5" fill="#ffd43b"/><path d="M8 19h9a3.5 3.5 0 0 0 0-7 5 5 0 0 0-9.5 1.5A2.8 2.8 0 0 0 8 19z" fill="#fff"/></svg></span><span>Weather</span></div>
+    <div class="app"><span class="ico" style="background:#fff"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24h12.632v-5.684H5.684V24zM18.316 5.684V0H1.895A1.894 1.894 0 0 0 0 1.895v16.421h5.684V5.684h12.632zm-7.207 6.25v-.065c.272-.144.5-.349.687-.617s.279-.595.279-.982c0-.379-.099-.72-.3-1.025a2.05 2.05 0 0 0-.832-.714 2.703 2.703 0 0 0-1.197-.257c-.6 0-1.094.156-1.481.467-.386.311-.65.671-.793 1.078l1.085.452c.086-.249.224-.461.413-.633.189-.172.445-.257.767-.257.33 0 .602.088.816.264a.86.86 0 0 1 .322.703c0 .33-.12.589-.36.778-.24.19-.535.284-.886.284h-.567v1.085h.633c.407 0 .748.109 1.02.327.272.218.407.499.407.843 0 .336-.129.614-.387.832s-.565.327-.924.327c-.351 0-.651-.103-.897-.311-.248-.208-.422-.502-.521-.881l-1.096.452c.178.616.505 1.082.977 1.401.472.319.984.478 1.538.477a2.84 2.84 0 0 0 1.293-.291c.382-.193.684-.458.902-.794.218-.336.327-.72.327-1.149 0-.429-.115-.797-.344-1.105a2.067 2.067 0 0 0-.881-.689zm2.093-1.931l.602.913L15 10.045v5.744h1.187V8.446h-.827l-2.158 1.557zM22.105 0h-3.289v5.184H24V1.895A1.894 1.894 0 0 0 22.105 0zm-3.289 23.5l4.684-4.684h-4.684V23.5zM0 22.105C0 23.152.848 24 1.895 24h3.289v-5.184H0v3.289z"/></svg></span><span>Calendar</span></div>
+    <div class="app"><span class="ico" style="background:#fff"><svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2" fill="#0a84ff"/><circle cx="6" cy="12" r="2" fill="#ff9f0a"/><circle cx="6" cy="17" r="2" fill="#ff375f"/><path d="M10 7h9M10 12h9M10 17h9" stroke="#c7c7cc" stroke-width="1.6" stroke-linecap="round"/></svg></span><span>Reminders</span></div>
   </div>
 </div></section>
 
@@ -451,7 +456,6 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <h2>Dinner, taxi, visa run. <span class="hl"><span>You name it, it’s done.</span></span></h2>
     <img class="steps-shot" src="assets/app-3steps.webp" alt="One message to Altgirl: padel court, taxi there and back and dinner after the game, all done in three steps" width="740" height="1126" loading="lazy">
     <p class="fine">Padel and rides are live. Food and visa runs are coming.</p>
-    <p class="dim">Your chatbot answers. She gets it done.</p>
   </div>
 </div></section>
 
@@ -461,7 +465,7 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
   <div class="one">
     <p class="mono k dot">Only yours</p>
     <h2>She learns from you. <span class="hl"><span>Only you.</span></span></h2>
-    <p class="dim">She knows your court and your time before you ask. It stays on your phone. Never sold.</p>
+    <p class="dim">Kept on your phone where possible. Never sold.</p>
     <div class="usual panel">
       <div class="u-her"><img src="assets/app-avatar.webp" alt=""><p>padel’s done at 19:30. the usual pho from <b>your spot by the beach</b> to your apartment after?</p></div>
       <div class="u-me">yes, same as always</div>
@@ -470,57 +474,11 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
   </div>
 </div></section>
 
-<!-- 6. карта -->
-<section class="slide" id="card" data-pose="reach"><div class="wrap">
-  <div class="one">
-    <p class="mono k dot">The card · planned for early Q2 2027</p>
-    <h2>Every swipe makes her <span class="hl"><span>smarter.</span></span></h2>
-    <p class="dim">An assistant with her own card: you spend, or she pays for you on your limits.</p>
-    <div class="glasswrap"><svg class="ycard" viewBox="0 0 1000 630" role="img" aria-label="YO:Altgirl card">
-  <defs>
-    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".09"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/><stop offset="1" stop-color="#e9e5ff" stop-opacity=".08"/></linearGradient><linearGradient id="shine" x1="0" y1="0" x2=".6" y2=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-    <linearGradient id="holo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4fd6e8"/><stop offset=".3" stop-color="#d1f931"/><stop offset=".55" stop-color="#ff7ad9"/><stop offset=".8" stop-color="#8b6dff"/><stop offset="1" stop-color="#4fd6e8"/></linearGradient>
-    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1f931"/><stop offset=".5" stop-color="#ff7ad9" stop-opacity=".6"/><stop offset="1" stop-color="#6b57f6"/></linearGradient>
-    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <clipPath id="cut"><path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z"/></clipPath>
-  </defs>
-  <g clip-path="url(#cut)">
-    <rect width="1000" height="630" fill="url(#glass)"/>
-        <polygon points="0,379.5 25,370.9 50,363.1 75,356.4 100,350.8 125,346.4 150,343.3 175,341.4 200,340.7 225,341.2 250,342.7 275,345.1 300,348.2 325,352.0 350,356.1 375,360.3 400,364.5 425,368.4 450,371.8 475,374.6 500,376.5 525,377.4 550,377.2 575,375.8 600,373.2 625,369.3 650,364.2 675,357.9 700,350.6 725,342.4 750,333.3 775,323.7 800,313.6 825,303.4 850,293.2 875,283.2 900,273.7 925,264.8 950,256.8 975,249.7 1000,243.6 1000,299.7 975,305.8 950,313.5 925,322.8 900,333.4 875,344.9 850,357.0 825,369.5 800,381.7 775,393.5 750,404.4 725,414.2 700,422.6 675,429.4 650,434.7 625,438.2 600,440.2 575,440.6 550,439.8 525,437.9 500,435.1 475,431.8 450,428.1 425,424.4 400,420.8 375,417.5 350,414.6 325,412.4 300,410.7 275,409.8 250,409.5 225,410.0 200,411.1 175,412.8 150,415.3 125,418.3 100,422.0 75,426.3 50,431.4 25,437.1 0,443.5" fill="url(#holo)" opacity=".6"/>
-    
-  </g>
-  <path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
-  <text x="56" y="104" font-family="Geist,Inter,sans-serif" font-weight="800" font-size="74" font-style="italic" fill="#f6f7fb" letter-spacing="-3">yo</text>
-  <text x="890" y="76" text-anchor="end" font-family="Geist Mono,monospace" font-size="22" fill="#f6f7fb" letter-spacing="3">PERSONAL AGENT CARD</text>
-  <text x="890" y="106" text-anchor="end" font-family="Geist Mono,monospace" font-size="18" fill="#d1f931" letter-spacing="3">HOLOGLASS · VIRTUAL</text>
-  <g filter="url(#glow)" stroke="rgba(209,249,49,.75)" stroke-width="2.5" fill="none">
-    <polyline points="178,290 430,290 470,250 700,250"/><circle cx="700" cy="250" r="5" fill="#d1f931"/>
-    <polyline points="178,302 380,302 420,342 610,342"/><circle cx="610" cy="342" r="5" fill="#d1f931"/>
-    <polyline points="122,306 122,352 300,352"/><circle cx="300" cy="352" r="5" fill="#d1f931"/>
-  </g>
-  <rect x="66" y="220" width="112" height="86" rx="14" fill="rgba(226,240,150,.85)"/>
-  <g stroke="rgba(20,21,46,.55)" stroke-width="2">
-    <line x1="104" y1="220" x2="104" y2="306"/><line x1="140" y1="220" x2="140" y2="306"/>
-    <line x1="66" y1="250" x2="104" y2="250"/><line x1="66" y1="276" x2="104" y2="276"/>
-    <line x1="140" y1="250" x2="178" y2="250"/><line x1="140" y1="276" x2="178" y2="276"/>
-  </g>
-  <g stroke="#f6f7fb" stroke-width="4" fill="none" stroke-linecap="round"><path d="M214.2 252.7 A16 16 0 0 1 214.2 273.3"/><path d="M224.9 243.7 A30 30 0 0 1 224.9 282.3"/><path d="M235.7 234.7 A44 44 0 0 1 235.7 291.3"/></g>
-  <text x="64" y="440" font-family="Geist Mono,monospace" font-size="40" fill="#f6f7fb" letter-spacing="4">•••• •••• •••• 0119</text>
-  <text x="64" y="508" font-family="Geist Mono,monospace" font-size="17" fill="rgba(246,247,251,.55)" letter-spacing="3">CARDHOLDER</text>
-  <text x="64" y="566" font-family="Geist Mono,monospace" font-size="44" fill="#f6f7fb" letter-spacing="3">YOUR NAME</text>
-  <text x="810" y="508" text-anchor="end" font-family="Geist Mono,monospace" font-size="15" fill="rgba(246,247,251,.55)" letter-spacing="3">VALID THRU</text>
-  <text x="810" y="548" text-anchor="end" font-family="Geist Mono,monospace" font-size="30" fill="#f6f7fb" letter-spacing="3">12/29</text>
-  <circle cx="888" cy="518" r="54" fill="url(#holo)" opacity=".85"/>
-  <polygon points="888.0,488.0 895.9,507.1 916.5,508.7 900.8,522.2 905.6,542.3 888.0,531.5 870.4,542.3 875.2,522.2 859.5,508.7 880.1,507.1" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="3"/>
-</svg></div>
-    <div><a class="cta solid" href="card.html">Reserve the card · skip the invite</a></div>
-    <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
-  </div>
-</div></section>
+
 
 
 <!-- 6b. карта: живая 3D-сцена + УТП -->
-<section class="slide" data-pose="reach"><div class="handcard" aria-hidden="true"><div class="glasswrap"><svg class="ycard" viewBox="0 0 1000 630" role="img" aria-label="YO:Altgirl card">
+<section class="slide" id="card" data-pose="reach"><div class="handcard" aria-hidden="true"><div class="glasswrap"><svg class="ycard" viewBox="0 0 1000 630" role="img" aria-label="YO:Altgirl card">
   <defs>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".09"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/><stop offset="1" stop-color="#e9e5ff" stop-opacity=".08"/></linearGradient><linearGradient id="shine" x1="0" y1="0" x2=".6" y2=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
     <linearGradient id="holo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4fd6e8"/><stop offset=".3" stop-color="#d1f931"/><stop offset=".55" stop-color="#ff7ad9"/><stop offset=".8" stop-color="#8b6dff"/><stop offset="1" stop-color="#4fd6e8"/></linearGradient>
@@ -558,11 +516,11 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
   <polygon points="888.0,488.0 895.9,507.1 916.5,508.7 900.8,522.2 905.6,542.3 888.0,531.5 870.4,542.3 875.2,522.2 859.5,508.7 880.1,507.1" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="3"/>
 </svg></div></div><div class="wrap">
   <div class="one usp panel">
-    <p class="mono k dot">The YO card · early Q2 2027</p>
-    <p class="visa">VISA</p>
+    <p class="mono k dot">The card · planned for early Q2 2027</p>
+    <h2>Every swipe makes her <span class="hl"><span>smarter.</span></span></h2>
     <ul class="ulist">
-      <li><span><b>She pays for you.</b> On limits you set, confirmed with one tap.</span></li>
-      <li><span><b>Works in every city.</b> One card wherever you land. Mastercard and UnionPay next.</span></li>
+      <li><span><b>She pays for you.</b> On your limits, one tap to confirm.</span></li>
+      <li><span><b>One card wherever you land.</b></span></li>
     </ul>
     <div id="join" class="joinbox">
       <form class="join panel" novalidate>
@@ -579,15 +537,15 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
         <input type="text" name="othercity" id="othercity" placeholder="Which city? Type it here" aria-label="Your city" hidden>
         <input type="checkbox" id="reserve" name="reserve" checked hidden>
         <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button class="cta solid" type="submit" id="go">Reserve the card · get in now</button>
-        <p class="fine">Free. The card ships early Q2 2027; Altgirl opens for you today. <button type="button" class="linkbtn" id="havecode">I have an invite code</button></p>
+        <button class="cta solid" type="submit" id="go">Get in</button>
+        <p class="fine">Free. Reserves your card too. <button type="button" class="linkbtn" id="havecode">I have an invite code</button></p>
       </form>
       <div class="ok panel" role="status">
         <h3>You’re in ✦</h3>
         <p class="dim">Check your email: your link to Altgirl is on its way. <span class="okcard" hidden>Your card reservation is saved too.</span></p>
       </div>
     </div>
-    <p class="fine">Cards will be issued by a licensed partner. YO:Labs is not a bank.</p>
+    <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
   </div>
 </div></section>
 
@@ -597,7 +555,7 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <p class="mono k dot">City by city</p>
     <h2>Next: <span class="hl"><span>your city?</span></span></h2>
     <div class="citynames"><span>Da Nang</span><span>Paris</span><span>Belgrade</span><span>Cyprus</span><span class="you">+ yours</span></div>
-    <p class="dim">Cities with the most people in line open first.</p>
+    <p class="dim">Cities with the most people in line open first. Bring friends to move yours up.</p>
   </div>
 </div></section>
 
@@ -607,7 +565,7 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
     <p class="mono k dot">For builders</p>
     <h2>Built an agent? <span class="hl"><span>We bring the people.</span></span></h2>
     <p class="dim">Make an agent for your community. Altgirl puts it in front of the people who need it.</p>
-    <div><a class="cta" href="https://yo-landing.fly.dev/#sdk">Build with YO ↗</a></div>
+    <div><a class="cta" href="https://yomarina.github.io/yo-labs-site/">Build with YO ↗</a></div>
   </div>
 </div></section>
 
@@ -615,20 +573,17 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 <section id="faq" data-pose="turn-01"><div class="wrap">
   <div class="head"><p class="mono k dot">Questions</p><h2>Before you <span class="hl"><span>sign up</span></span></h2></div>
   <div class="faq">
-    <details open><summary>How do I get in?</summary><p>Altgirl is invite only: you need a code from a friend or a local guide. No code? Reserve the card. It’s free, and you get Altgirl right away.</p></details>
-    <details><summary>What does it cost?</summary><p>Getting in line and reserving the card are free today. Card pricing comes before launch, and you can change your mind at any time.</p></details>
-    <details><summary>When can I use it?</summary><p>Our first testers start on November 24 through partner communities. After that, by invite. Card reservers get in right away.</p></details>
-    <details><summary>What can she do today?</summary><p>On November 24: a game at your club and the ride to it, your day pinned in one place. More scenarios ship every week. Anything not live yet is marked “in build”.</p></details>
+    <details open><summary>How do I get in?</summary><p>With a code from a friend or a local guide. No code? Reserve the card: it’s free, and you get in today.</p></details>
+    <details><summary>What can she do today?</summary><p>From November 24: a padel game at your club and the ride there. New scenarios ship every week; anything not live yet is marked “in build”.</p></details>
     <details><summary>What happens to my data?</summary><p>Your Altgirl is separate from everyone else’s. What she learns is kept on your phone where possible. We don’t sell it.</p></details>
-    <details><summary>Is the card a bank card?</summary><p>The card will be issued by licensed partners. YO:Labs is not a bank. Networks, fees and countries come before launch.</p></details>
-    <details><summary>Can I bring Altgirl to my city?</summary><p>Yes. Pick “Somewhere else” in the form and tell us your city. If you want to help open it, say so in the reply to our first email.</p></details>
+    <details><summary>Is the card a bank card?</summary><p>It will be issued by licensed partners; YO:Labs is not a bank. Pricing, networks and countries come before launch. Reserving is free, and you can cancel any time.</p></details>
   </div>
 </div></section>
 
 <!-- 9. финал -->
 <section class="final slide" data-pose="squat"><div class="wrap">
   <h2>Less apps, <span class="hl"><span>more life.</span></span></h2>
-  <a class="cta solid" href="#join">Get in line</a>
+  <a class="cta solid" href="#join">Get in</a>
 </div></section>
 
 <footer><div class="wrap">
@@ -637,7 +592,7 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
   <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
 </div></footer>
 
-<div class="sticky" id="sticky"><a class="cta solid" href="#join">Get in line</a></div>
+<div class="sticky" id="sticky"><a class="cta solid" href="#join">Get in</a></div>
 <script>
 /* Заявки уходят на server.py (/api/waitlist): SQLite + Telegram + письмо. Пусто — сохраняются в браузере (демо). */
 const FORM_ENDPOINT = "";
