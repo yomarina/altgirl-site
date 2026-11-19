@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en" data-logo="lime">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YO:Altgirl card · Put your name on it.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* the look of index.html: same tokens, backdrop, grid, header and form. The page fits one screen and does not scroll */
+html{font-size:clamp(15px,calc(.6vw + 8px),20px)}
+:root{
+  --bg:#141540; --ink:#f6f7fb; --dim:rgba(246,247,251,.82); --faint:rgba(246,247,251,.52);
+  --line:rgba(233,229,255,.14); --panel:rgba(18,19,58,.92); --lime:#d1f931; --violet:#5b45f0; --violet2:#6b57f6;
+  --navy:#14152e; --pink:#ff7ad9;
+  --grad:linear-gradient(90deg,var(--lime),var(--violet2));
+  --mono:"Geist Mono",ui-monospace,monospace; --sans:"Geist",system-ui,sans-serif;
+  --c1:16.667%; --c3:83.333%; --hdr:4rem; --pad:2rem; --logo:#fff;
+}
+:root[data-logo=lime]{--logo:var(--lime)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='34' viewBox='0 0 14 17' shape-rendering='crispEdges'%3E%3Cpath d='M1 1v13l3-3 3 5 2-1-3-5h4z' fill='%23fff' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E") 2 2,auto}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{color:var(--ink);font:400 1.0625rem/1.5 var(--sans)}
+body{background:transparent}   /* hosts that paint body white would hide the backdrop layer */
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;font-size:.8125rem}
+
+.backdrop{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(38rem 30rem at 50% 52%,rgba(91,69,240,.32),transparent 70%),
+  radial-gradient(30rem 26rem at 6% 12%,rgba(107,87,246,.38),transparent 70%),
+  radial-gradient(26rem 22rem at 94% 10%,rgba(255,122,217,.2),transparent 70%),
+  radial-gradient(24rem 20rem at 10% 92%,rgba(209,249,49,.12),transparent 70%),
+  radial-gradient(28rem 22rem at 92% 90%,rgba(79,214,232,.12),transparent 70%),var(--bg)}
+.backdrop::after{content:"";position:absolute;inset:0;opacity:.09;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(107,87,246,.16) 1px,transparent 1px) 0 0/calc(100% / 24) 100%,linear-gradient(rgba(107,87,246,.16) 1px,transparent 1px) 0 0/100% calc(100vw / 24)}
+.grid i{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.grid i:nth-child(1){left:var(--c1)} .grid i:nth-child(2){left:50%} .grid i:nth-child(3){left:var(--c3)}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;touch-action:none;cursor:grab}
+.drag #gl{cursor:grabbing}
+#fallback{position:fixed;left:50%;bottom:0;height:90vh;transform:translateX(-50%);z-index:0;display:none}
+.nogl #fallback{display:block}
+.obj{position:fixed;left:0;top:0;pointer-events:none;z-index:1;will-change:transform}
+.nogl .obj,.nogl .turn{display:none}
+
+header{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:10;display:flex;align-items:center;border-bottom:1px solid var(--line);background:rgba(20,21,64,.6);backdrop-filter:blur(12px)}
+.logo{width:var(--c1);padding-left:var(--pad);display:flex;align-items:center}
+.mark{display:block;width:3.06rem;height:1.9rem;background:var(--logo);-webkit-mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat;mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat}
+nav{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2.25rem}
+nav a{color:var(--dim);transition:color .2s;padding:.25rem 0} nav a:hover,nav a.on{color:var(--lime)}
+nav a.dcn{font-weight:500}
+nav a.dcn:not(:hover):not(.on){background:linear-gradient(90deg,var(--lime) 15%,#8b6dff 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.flag{width:1.35em;height:.9em;margin-left:.3em;vertical-align:-.1em;border-radius:2px}
+.cta{position:relative;margin:0 var(--pad) 0 auto;padding:.7rem 1.1rem;display:inline-flex;gap:.6rem;align-items:center;
+  border:1.5px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:background .25s,color .25s}
+.cta:hover{background:var(--grad) padding-box,var(--grad) border-box;color:var(--bg)}
+.cta:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--ink)}
+/* "Launch app" sits right after the logo; the logo gives up its fixed column width so the button stays next to it */
+.launch{margin:0 0 0 1.25rem;padding:.55rem .9rem;flex:none;
+  border:1.5px solid var(--lime);color:var(--lime);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:background .25s,color .25s}
+.launch:hover{background:var(--lime);color:var(--bg)}
+.launch:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--ink)}
+.logo:has(+.launch){width:auto}
+/* phones: three header items must fit in 320px+ */
+@media (max-width:899px){.launch{padding:.45rem .6rem;font-size:.75rem}.logo:has(+.launch){flex:none}.launch{margin-left:.75rem}.launch~.cta{padding:.5rem .65rem;font-size:.75rem;gap:.4rem}}
+@media (max-width:420px){.launch~.cta .dots{display:none}.logo:has(+.launch) .mark{width:2.4rem;height:1.5rem}}
+.dots{display:inline-grid;grid-template-columns:repeat(2,3px);gap:3px}.dots b{width:3px;height:3px;background:currentColor;border-radius:1px}
+
+/* the text sits over the stage; only the controls take the pointer, a drag anywhere else turns the card */
+main{position:fixed;inset:var(--hdr) 0 0;z-index:2;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:2rem var(--pad) 1.2rem}
+.panel{background:var(--panel);border:1px solid var(--line)}
+.top{display:flex;flex-direction:column;align-items:flex-start;gap:1.1rem}
+.kick{display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem}
+.kick i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+h1{font-weight:500;font-size:clamp(2.4rem,min(4.6vw,8vh),5rem);line-height:.96;letter-spacing:-.04em;text-shadow:0 0 .35em rgba(16,17,38,.9),0 0 .1em rgba(16,17,38,.9)}
+.box{display:inline-block;padding:.02em .16em .08em;border:2px solid transparent;text-shadow:none;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;
+  clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}
+.hl{position:relative;z-index:0;display:inline-block;white-space:nowrap;color:var(--navy);padding:0 .08em;text-shadow:none}   /* one line: a wrapped inline span broke the lime highlight */
+.hl::before{content:"";position:absolute;inset:.14em -.02em .06em;background:var(--lime);z-index:-1;transform:skewX(-6deg)}
+
+.bottom{display:flex;flex-direction:column;align-items:center;gap:.9rem}
+.bottom>*{pointer-events:auto}
+.turn{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .8rem;color:var(--dim);cursor:pointer;font-family:var(--mono)}
+.turn:hover{color:var(--lime);border-color:var(--lime)}
+.turn:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.turn .t2{display:none}
+@media (hover:none){.turn .t1{display:none}.turn .t2{display:inline}}
+form{display:flex;width:min(46rem,100%);border:2px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--grad) border-box;box-shadow:.5rem .5rem 0 var(--lime)}
+form[hidden]{display:none}
+form label{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:.15rem;padding:.65rem 1.25rem .7rem;cursor:text}
+form label+label{border-left:1px solid var(--line)}
+form label:focus-within{background:rgba(107,87,246,.2)}
+form label span{font:500 .75rem/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--lime)}
+form input{background:none;border:0;color:var(--ink);font:inherit;font-size:1.25rem;outline:none;width:100%;min-width:0}
+form input[name=holder]{font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+form input::placeholder{color:rgba(246,247,251,.55);font-family:var(--sans);text-transform:none;letter-spacing:0}
+form button{border:0;background:var(--lime);color:var(--navy);padding:0 2rem;font-family:var(--mono);font-weight:500;text-transform:uppercase;font-size:1.0625rem;cursor:pointer}
+form button:disabled{background:var(--violet2);color:var(--ink);cursor:progress}
+form button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+form:has([aria-invalid=true]){background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--pink) border-box;box-shadow:.5rem .5rem 0 var(--pink)}
+.hp{position:absolute;left:-9999px}
+.ok{min-height:2.4rem;display:flex;justify-content:center;align-items:flex-start}
+.ok b{font-weight:500;font-size:1.0625rem;padding:.5rem .95rem;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--ink);animation:okin .3s cubic-bezier(.2,.8,.2,1)}
+.ok b.done{background:var(--lime);border-color:var(--lime);color:var(--navy)}
+.ok b.err{background:var(--pink);border-color:var(--pink);color:var(--navy)}
+@keyframes okin{from{opacity:0;transform:translateY(-.4rem)}}
+.legal{color:var(--faint);text-align:center;font-size:.6875rem;text-shadow:0 0 .4em rgba(16,17,38,.95)}
+
+@media (max-width:899px){
+  :root{--c1:0%;--c3:100%;--pad:1rem}
+  .grid i{display:none} .grid i:nth-child(2){display:block;opacity:.6}
+  .grid{background-size:calc(100% / 8) 100%,100% calc(100vw / 8)}
+  nav{display:none}
+  .logo{width:auto;flex:1}
+  main{padding:1.1rem var(--pad) .8rem}
+  .top{gap:.7rem}
+  h1{font-size:clamp(2.2rem,11vw,3.2rem)}
+  .bottom{gap:.6rem}
+  form{flex-wrap:wrap;box-shadow:.35rem .35rem 0 var(--lime)}
+  form label{flex-basis:100%;padding:.5rem 1rem}
+  form label+label{border-left:0;border-top:1px solid var(--line)}
+  form button{flex-basis:100%;height:3rem}
+  .ok{min-height:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<!-- PostHog: pageviews only on yo.finance (no autocapture, no recordings); URLs are sent without query and hash. -->
+<script>
+(function(){
+  var TOKEN='phc_xhJ2Zke7VY6v2Wu2rTRqrAngTn7QF6ebRUGC5bhqfhyF', HOST='https://eu.i.posthog.com', HOSTS=['yo.finance','www.yo.finance'];
+  if(HOSTS.indexOf(location.hostname)<0) return;
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset identify alias people.set people.set_once set_config get_distinct_id get_property".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  function bare(u){try{u=new URL(u);return u.origin+u.pathname}catch(e){return u}}
+  posthog.init(TOKEN,{
+    api_host:HOST, person_profiles:'identified_only',
+    capture_pageview:true, capture_pageleave:true, autocapture:false,
+    disable_session_recording:true, disable_surveys:true,
+    before_send:function(ev){var p=ev&&ev.properties;if(p){['$current_url','$referrer','$initial_current_url','$initial_referrer'].forEach(function(k){if(typeof p[k]==='string')p[k]=bare(p[k])})}return ev}
+  });
+})();
+</script>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"></div>
+<div class="grid" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<img id="fallback" src="assets/poses/reach.webp" alt="">
+
+<header>
+  <a class="logo" href="index.html" aria-label="YO:Labs"><span class="mark"></span></a>
+  <a class="launch mono" href="https://altgirl.yo.finance">Launch app</a>
+  <nav class="mono"><a href="index.html#chat">One chat</a><a href="card.html" class="on" aria-current="page">Card</a><a href="index.html#faq">FAQ</a></nav>
+  <a class="cta mono" href="#reserve" id="cta"><span class="dots"><b></b><b></b><b></b><b></b></span>Reserve</a>
+</header>
+
+<main>
+  <div class="top">
+    <div class="kick mono panel"><i></i>Reserve the card · get Altgirl today, no invite needed</div>
+    <h1><span class="box">Put your name</span> <span class="hl">on it.</span></h1>
+  </div>
+  <div class="bottom">
+    <button class="turn mono panel" type="button" id="turn"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="t1">Scroll or drag to turn the card</span><span class="t2">Drag to turn the card</span></button>
+    <form id="reserve" novalidate>
+      <label><span>Name on card</span><input name="holder" type="text" maxlength="22" autocomplete="name" autocapitalize="characters" spellcheck="false" placeholder="Your name"></label>
+      <label><span>Email</span><input name="contact" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-describedby="ok"></label>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button>Reserve · free ↗</button>
+    </form>
+    <div class="ok" id="ok" role="status"></div>
+    <p class="legal mono">Free · Altgirl is invite only, card reservers get in right away · the card ships early Q2 2027 · Cards will be issued by a licensed partner. YO:Labs is not a bank. Reserving is not an application for a financial product.</p>
+  </div>
+</main>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile = () => innerWidth < 900;
+const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize);
+const D = Math.PI / 180;
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true }); }
+catch (e) { document.body.classList.add('nogl'); }   // shortcut: no WebGL shows her picture and the form, no card; add a CSS card if that audience matters
+
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
+camera.position.z = 10;
+const TAN = Math.tan(17.5 * D);
+const viewH = z => 2 * (10 - z) * TAN, viewW = z => viewH(z) * camera.aspect;
+const at = (sx, sy, z) => new THREE.Vector3((sx - .5) * viewW(z), (.5 - sy) * viewH(z), z);   // a screen point (share of the viewport, y from the top) at depth z
+
+// star dust, as on the landing
+const N = mobile() ? 400 : 900, pos = new Float32Array(N * 3);
+for (let i = 0; i < N; i++) { pos[i*3] = (Math.random()-.5)*24; pos[i*3+1] = (Math.random()-.5)*18; pos[i*3+2] = -Math.random()*14 + 2; }
+const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xe9e5ff, size: .025, transparent: true, opacity: .5 }));
+scene.add(dust);
+
+// her: a close-up behind the card, her palm toward the viewer. One plane; she moves in stop-motion steps, the card and the world stay smooth
+const HER = { src: 'assets/poses/reach.webp', palm: [.27, .6] };   // palm: centre of her palm, share of the image (x, y from the top); her face is up and right of it
+let herAr = 1.5;
+const herTex = new THREE.TextureLoader().load(HER.src, t => { herAr = t.image.width / t.image.height; });
+const her = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, uniforms: { t: { value: herTex } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  // the body is cut by the image's bottom edge: fade it out
+  fragmentShader: `uniform sampler2D t; varying vec2 vUv; void main(){ vec4 c = texture2D(t, vUv); gl_FragColor = vec4(c.rgb, c.a * smoothstep(0., .1, vUv.y)); }`,
+}));
+her.renderOrder = 0; scene.add(her);
+
+/* ---------- the card: holographic glass, clear in the middle so her hand shows through ---------- */
+const CW = 3.2, CH = CW / 1.586, CR = .14, CUT = .34, DEPTH = .05;
+const shape = new THREE.Shape();
+{ const w = CW / 2, h = CH / 2, r = CR;
+  shape.moveTo(-w + r, -h); shape.lineTo(w - r, -h); shape.quadraticCurveTo(w, -h, w, -h + r);
+  shape.lineTo(w, h - CUT); shape.lineTo(w - CUT, h);   // the cut corner of the landing's boxes and buttons
+  shape.lineTo(-w + r, h); shape.quadraticCurveTo(-w, h, -w, h - r); shape.lineTo(-w, -h + r); shape.quadraticCurveTo(-w, -h, -w + r, -h); }
+const faceGeo = new THREE.ShapeGeometry(shape, 16);
+{ const p = faceGeo.attributes.position, uv = faceGeo.attributes.uv;
+  for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / CW + .5, p.getY(i) / CH + .5); }
+
+// each face: a print canvas (what is printed on the glass) and a mask canvas (r: holo foil, g: lime glow, b: frost)
+const TW = 1024, TH = Math.round(TW / 1.586), S = TW / CW;
+const T = { value: 0 }, GLOW = { value: 1 };
+function makeFace() {
+  const print = document.createElement('canvas'), mask = document.createElement('canvas');
+  print.width = mask.width = TW; print.height = mask.height = TH;
+  const ptex = new THREE.CanvasTexture(print), mtex = new THREE.CanvasTexture(mask);
+  if (renderer) ptex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, uniforms: { print: { value: ptex }, mask: { value: mtex }, t: T, glow: GLOW },
+    vertexShader: `varying vec2 vUv; varying vec3 vN, vV;
+      void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform sampler2D print, mask; uniform float t, glow; varying vec2 vUv; varying vec3 vN, vV;
+      vec3 rainbow(float h){ return .55 + .45 * cos(6.28318 * (h + vec3(0., .33, .67))); }
+      void main(){
+        vec4 m = texture2D(mask, vUv), p = texture2D(print, vUv);
+        vec3 n = normalize(vN), v = normalize(vV);
+        float fres = pow(1. - abs(dot(n, v)), 3.);
+        // the foil colour runs across the card and shifts as it turns
+        float h = vUv.x * .9 + vUv.y * .6 + n.x * 1.4 + n.y * .9 + t * .03;
+        vec3 irid = mix(rainbow(h), vec3(.82, .98, .19), .25 * smoothstep(.6, 1., sin(h * 14.)));
+        vec3 col = vec3(.62, .58, 1.) * .3 + irid * (.16 + .8 * m.r) + fres * .55;
+        float a = .12 + .5 * m.b + .7 * m.r + fres * .5;
+        // a glare band sweeps over the glass as the card turns
+        float band = smoothstep(.12, 0., abs(vUv.x * .8 - vUv.y * .4 - (.3 + n.x * 1.6 - n.y * .8)));
+        float spec = pow(max(dot(n, normalize(normalize(vec3(-.4, .6, 1.)) + v)), 0.), 80.);
+        col += band * .5 + spec * .8; a += band * .22;
+        col = mix(col, p.rgb, p.a); a = max(a, p.a);
+        col += vec3(.82, .98, .19) * m.g * glow; a = max(a, m.g * .9);
+        gl_FragColor = vec4(col, clamp(a, 0., 1.));
+      }`,
+  });
+  return { print, mask, ptex, mtex, mat };
+}
+const F = makeFace(), B = makeFace();
+const card = new THREE.Group(), cardBase = new THREE.Group();
+const front = new THREE.Mesh(faceGeo, F.mat), back = new THREE.Mesh(faceGeo, B.mat);
+front.position.z = DEPTH / 2 + .002; back.position.z = -DEPTH / 2 - .002; back.rotation.y = Math.PI;
+const edgeGeo = new THREE.ExtrudeGeometry(shape, { depth: DEPTH, bevelEnabled: false, curveSegments: 16 }); edgeGeo.translate(0, 0, -DEPTH / 2);
+const edge = new THREE.Mesh(edgeGeo, [new THREE.MeshBasicMaterial({ visible: false }), new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, uniforms: { t: T },
+  vertexShader: `varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `uniform float t; varying vec3 vP; void main(){ gl_FragColor = vec4(.62 + .38 * cos(6.28318 * (vP.x * .25 + vP.y * .4 + t * .1 + vec3(0., .33, .67))), .9); }`,
+})]);
+edge.renderOrder = 2; front.renderOrder = back.renderOrder = 3;
+card.add(edge, front, back); cardBase.add(card); scene.add(cardBase);
+
+// two lime rings around the card, as around her waist on the landing; the near arc is the lower one. They write depth, so the card glass passes behind the near arc
+const orbit = new THREE.Group(); scene.add(orbit);
+const ring = new THREE.Mesh(new THREE.TorusGeometry(CW * .72, .012, 6, 200), new THREE.MeshBasicMaterial({ color: 0xd1f931, transparent: true, opacity: .7 }));
+const ring2 = new THREE.Mesh(new THREE.TorusGeometry(CW * .84, .008, 6, 200), new THREE.MeshBasicMaterial({ color: 0xd1f931, transparent: true, opacity: .3 }));
+ring.rotation.x = -1.2; ring2.rotation.set(-1.35, .35, 0); ring.renderOrder = ring2.renderOrder = 1;
+const packetPos = new Float32Array(5 * 3), packetGeo = new THREE.BufferGeometry();
+packetGeo.setAttribute('position', new THREE.BufferAttribute(packetPos, 3));
+ring.add(new THREE.Points(packetGeo, new THREE.PointsMaterial({ color: 0xd1f931, size: .09, transparent: true, opacity: .95, depthWrite: false })));
+orbit.add(ring, ring2);
+
+/* ---------- what is printed on the card ---------- */
+const MONO = '"Geist Mono", ui-monospace, monospace', SANS = 'Geist, system-ui, sans-serif';
+const LIME = '#d1f931', INK = 'rgba(246,247,251,.94)', FAINT = 'rgba(246,247,251,.5)';
+const logo = new Image(); logo.src = 'assets/yo-labs-logo.webp';
+let holder = '', inLine = false, signed = '';
+function outline(g, inset = 0) {   // the card shape in canvas pixels; canvas y runs down, so the cut corner is top-right here too
+  const r = CR * S, cut = CUT * S, i = inset, W = TW - i, H = TH - i;
+  g.beginPath(); g.moveTo(i + r, i); g.lineTo(W - cut + i * .4, i); g.lineTo(W, i + cut - i * .4); g.lineTo(W, H - r);
+  g.quadraticCurveTo(W, H, W - r, H); g.lineTo(i + r, H); g.quadraticCurveTo(i, H, i, H - r); g.lineTo(i, i + r); g.quadraticCurveTo(i, i, i + r, i); g.closePath();
+}
+function tinted(img, color, w, h) {   // the logo file is a mask: draw its shape in one colour
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  g.drawImage(img, 0, 0, w, h); g.globalCompositeOperation = 'source-in'; g.fillStyle = color; g.fillRect(0, 0, w, h); return c;
+}
+function text(g, s, x, y, font, color, align = 'left', spacing = '0px') {
+  g.font = font; g.fillStyle = color; g.textAlign = align; g.textBaseline = 'alphabetic'; g.letterSpacing = spacing; g.fillText(s, x, y); g.letterSpacing = '0px';
+}
+function star(g, cx, cy, r) {
+  g.beginPath();
+  for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r; g.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); }
+  g.closePath();
+}
+function baseLayers(f, frostTop, frostBottom) {
+  const g = f.print.getContext('2d'), m = f.mask.getContext('2d');
+  g.clearRect(0, 0, TW, TH);
+  // frost (blue): denser at the edges, clear glass in the middle
+  const fr = m.createLinearGradient(0, 0, 0, TH);
+  fr.addColorStop(0, `rgb(0,0,${frostTop})`); fr.addColorStop(.4, 'rgb(0,0,14)'); fr.addColorStop(.62, 'rgb(0,0,14)'); fr.addColorStop(1, `rgb(0,0,${frostBottom})`);
+  m.globalCompositeOperation = 'source-over'; m.fillStyle = fr; m.fillRect(0, 0, TW, TH);
+  m.globalCompositeOperation = 'lighter';
+  // the page's grid, etched into the glass
+  g.strokeStyle = 'rgba(233,229,255,.07)'; g.lineWidth = 1;
+  for (let x = 32; x < TW; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, TH); g.stroke(); }
+  for (let y = 32; y < TH; y += 32) { g.beginPath(); g.moveTo(0, y); g.lineTo(TW, y); g.stroke(); }
+  // a thin lime line inside the edge, cut corner included
+  outline(m, 16); m.strokeStyle = 'rgb(0,110,0)'; m.lineWidth = 3; m.stroke();
+  return { g, m };
+}
+function drawFront() {
+  const { g, m } = baseLayers(F, 70, 150);
+  // holo foil wave across the card
+  const wave = (x, o) => TH * .64 - Math.sin(x / TW * Math.PI * 2.2 + .6) * 42 - x * .12 + o;
+  m.fillStyle = 'rgb(170,0,0)'; m.beginPath(); m.moveTo(0, wave(0, 0));
+  for (let x = 0; x <= TW; x += 16) m.lineTo(x, wave(x, 0));
+  for (let x = TW; x >= 0; x -= 16) m.lineTo(x, wave(x, 64 + Math.sin(x / 90) * 8));
+  m.fill();
+  // logo: printed white, with foil under it
+  if (logo.naturalWidth) {
+    const h = 58, w = h * logo.naturalWidth / logo.naturalHeight;
+    g.drawImage(tinted(logo, INK, w, h), 56, 46, w, h); m.drawImage(tinted(logo, 'rgb(255,0,0)', w, h), 56, 46, w, h);
+  }
+  text(g, 'PERSONAL AGENT CARD', TW - CUT * S - 20, 76, `500 22px ${MONO}`, INK, 'right', '3px');
+  text(g, 'HOLOGLASS · VIRTUAL', TW - CUT * S - 20, 106, `500 18px ${MONO}`, LIME, 'right', '3px');
+  // chip, glowing lime
+  const cx = 66, cy = 220, cw = 112, ch = 86;
+  g.fillStyle = 'rgba(209,249,49,.85)'; g.beginPath(); g.roundRect(cx, cy, cw, ch, 14); g.fill();
+  g.strokeStyle = 'rgba(20,21,46,.55)'; g.lineWidth = 2;
+  [[cx + 38, cy, cx + 38, cy + ch], [cx + 74, cy, cx + 74, cy + ch], [cx, cy + 30, cx + 38, cy + 30], [cx, cy + 56, cx + 38, cy + 56], [cx + 74, cy + 30, cx + cw, cy + 30], [cx + 74, cy + 56, cx + cw, cy + 56]]
+    .forEach(([a, b, c, d]) => { g.beginPath(); g.moveTo(a, b); g.lineTo(c, d); g.stroke(); });
+  m.fillStyle = 'rgb(0,150,0)'; m.beginPath(); m.roundRect(cx - 4, cy - 4, cw + 8, ch + 8, 16); m.fill();
+  // contactless arcs
+  g.strokeStyle = INK; g.lineWidth = 4; g.lineCap = 'round';
+  for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(cx + cw + 24, cy + ch / 2, 16 + i * 14, -.7, .7); g.stroke(); }
+  // circuit traces from the chip, lime glow
+  const traces = [[[cx + cw, cy + 70], [430, cy + 70], [470, cy + 30], [700, cy + 30]], [[cx + cw, cy + 82], [380, cy + 82], [420, cy + 122], [610, cy + 122]], [[cx + 56, cy + ch], [cx + 56, 352], [300, 352]]];
+  traces.forEach(tr => {
+    [[g, 'rgba(209,249,49,.6)', 2], [m, 'rgb(0,90,0)', 5]].forEach(([c, s, w]) => {
+      c.strokeStyle = s; c.lineWidth = w; c.beginPath(); tr.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke();
+      const [ex, ey] = tr[tr.length - 1]; c.fillStyle = s; c.beginPath(); c.arc(ex, ey, w + 3, 0, Math.PI * 2); c.fill();
+    });
+  });
+  text(g, '•••• •••• •••• 0119', 64, 440, `500 40px ${MONO}`, INK, 'left', '4px');
+  text(g, 'CARDHOLDER', 64, 508, `500 17px ${MONO}`, FAINT, 'left', '3px');
+  let size = 46; const name = holder || 'YOUR NAME', maxW = TW - 64 - 300;
+  do { g.font = `500 ${size}px ${MONO}`; g.letterSpacing = '3px'; } while (g.measureText(name).width > maxW && (size -= 2) > 18);
+  text(g, name, 64, 566, `500 ${size}px ${MONO}`, holder ? INK : 'rgba(246,247,251,.32)', 'left', '3px');
+  text(g, 'VALID THRU', TW - 190, 508, `500 15px ${MONO}`, FAINT, 'right', '3px');
+  text(g, '12/29', TW - 190, 548, `500 30px ${MONO}`, INK, 'right', '3px');
+  // hologram sticker with the star from her top
+  m.fillStyle = 'rgb(255,0,0)'; m.beginPath(); m.arc(TW - 112, TH - 112, 54, 0, Math.PI * 2); m.fill();
+  g.strokeStyle = 'rgba(255,255,255,.7)'; g.lineWidth = 3; star(g, TW - 112, TH - 112, 30); g.stroke();
+  F.ptex.needsUpdate = F.mtex.needsUpdate = true;
+}
+function drawBack() {
+  const { g, m } = baseLayers(B, 120, 90);
+  g.fillStyle = 'rgba(10,10,30,.8)'; g.fillRect(0, 74, TW, 96);   // magnetic stripe
+  text(g, 'YO:ALTGIRL · PERSONAL AGENT CARD', 56, 52, `500 18px ${MONO}`, FAINT, 'left', '3px');
+  if (inLine) {
+    text(g, 'You’re in line', 56, 276, `600 76px ${SANS}`, INK, 'left', '-2px');
+    m.fillStyle = 'rgb(0,200,0)'; star(m, 600, 248, 24); m.fill();
+    g.fillStyle = LIME; star(g, 600, 248, 24); g.fill();
+    text(g, 'WE’LL EMAIL YOU WHEN YOUR CARD CAN BE ORDERED', 58, 322, `500 19px ${MONO}`, LIME, 'left', '2px');
+  } else {
+    text(g, 'Pre-order', 56, 276, `600 76px ${SANS}`, INK, 'left', '-2px');
+    text(g, 'PUT YOUR NAME ON THE FRONT', 58, 322, `500 19px ${MONO}`, LIME, 'left', '2px');
+  }
+  // signature strip
+  g.fillStyle = 'rgba(246,247,251,.82)'; g.fillRect(56, 380, 620, 80);
+  g.strokeStyle = 'rgba(91,69,240,.25)'; g.lineWidth = 2;
+  for (let x = 64; x < 676; x += 14) { g.beginPath(); g.moveTo(x, 380); g.lineTo(x + 30, 460); g.stroke(); }
+  if (signed) text(g, signed, 76, 438, `italic 600 46px "Snell Roundhand", "Segoe Script", "Brush Script MT", cursive`, '#2b2a6b');
+  text(g, 'AUTHORIZED SIGNATURE', 56, 490, `500 14px ${MONO}`, FAINT, 'left', '3px');
+  m.fillStyle = 'rgb(255,0,0)'; m.fillRect(TW - 250, 380, 190, 110);   // hologram patch
+  text(g, 'ISSUED BY A LICENSED PARTNER. YO:LABS IS NOT A BANK.', 56, TH - 46, `500 16px ${MONO}`, FAINT, 'left', '2px');
+  B.ptex.needsUpdate = B.mtex.needsUpdate = true;
+}
+const redraw = () => { drawFront(); drawBack(); };
+redraw();
+logo.onload = drawFront;
+document.fonts.load(`500 40px ${MONO}`).then(() => document.fonts.load(`600 76px ${SANS}`)).then(redraw, redraw);
+
+/* ---------- motion: the cursor tilts the card, the wheel and drags turn it ---------- */
+const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+let ry = reduce ? 0 : -420, vy = 0, base = 0, ax = 0, ay = 0, tx = 0, ty = 0, idle = -1e4, drag = null, kick = -1e4, snapT = 0;
+const now = () => performance.now();
+const snap = () => { base = Math.round(base / 180) * 180; };
+const face = backSide => { const o = backSide ? 180 : 0; base = Math.round((base - o) / 360) * 360 + o; };
+
+addEventListener('pointermove', e => {
+  mouse.tx = e.clientX / innerWidth - .5; mouse.ty = e.clientY / innerHeight - .5;
+  if (e.pointerType === 'touch' || drag) return;
+  idle = now(); ty = Math.max(-1, Math.min(1, mouse.tx * 2)) * 16; tx = Math.max(-1, Math.min(1, mouse.ty * 2)) * 11;
+});
+const gl = document.getElementById('gl'), ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+const onCard = e => { ndc.set(e.clientX / innerWidth * 2 - 1, 1 - e.clientY / innerHeight * 2); ray.setFromCamera(ndc, camera); return ray.intersectObjects([front, back, edge]).length > 0; };
+gl.addEventListener('pointerdown', e => { if (e.button) return; drag = { x: e.clientX, x0: e.clientX, v: 0, t: e.timeStamp }; gl.setPointerCapture(e.pointerId); document.body.classList.add('drag'); });
+gl.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const d = (e.clientX - drag.x) * .5, dt = Math.max(8, e.timeStamp - drag.t);
+  drag.x = e.clientX; drag.t = e.timeStamp; ry += d; base = ry; vy = d; drag.v = d * 16 / dt; idle = now();
+});
+function up(e) {
+  if (!drag) return;
+  if (e.type === 'pointerup' && Math.abs(drag.x - drag.x0) < 4) { if (onCard(e)) base += 180; }   // a tap on the card flips it
+  else { base = ry + drag.v * 12; vy = drag.v; }
+  snap(); drag = null; document.body.classList.remove('drag');
+}
+gl.addEventListener('pointerup', up); gl.addEventListener('pointercancel', up);
+addEventListener('wheel', e => {
+  if (e.ctrlKey) return;   // pinch zoom
+  e.preventDefault();
+  let d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (e.deltaMode === 1) d *= 16;
+  base += Math.max(-90, Math.min(90, d)) * .5; idle = now(); clearTimeout(snapT); snapT = setTimeout(snap, 180);
+}, { passive: false });
+document.getElementById('turn').addEventListener('click', () => { snap(); base += 180; idle = now(); });
+
+function size() {
+  if (!renderer) return;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+}
+addEventListener('resize', size); size();
+
+// glossy toys at the screen edges, as on the landing: one near and blurred, two sharp, one small and far. Near ones are never cut by the edge
+const TOYS = [
+  { src: 'coin', x: 15, y: 64, w: 6, r: 12, k: .8, m: [6, 58] }, { src: 'sparkle', x: 57, y: 20, w: 3, r: 0, k: .35, blur: 1.5, m: [86, 16] },
+  { src: 'star', x: 87, y: 62, w: 5.5, r: 14, k: .8 }, { src: 'heart', x: 3, y: 84, w: 10, r: 18, k: 2, blur: 9 },
+];
+const toyEls = TOYS.map(o => {
+  const im = new Image(); im.src = `assets/toys/obj-${o.src}.webp`; im.alt = ''; im.className = 'obj';
+  if (o.blur) im.style.filter = `blur(${o.blur}px)`;
+  im.onerror = () => im.remove(); document.body.appendChild(im); return im;
+});
+function moveToys(st) {
+  const W = innerWidth, H = innerHeight, mob = mobile(), sc = (mob ? .6 : 1) * rem(), mx = reduce ? 0 : mouse.x, my = reduce ? 0 : mouse.y;
+  TOYS.forEach((o, i) => {
+    const p = mob ? o.m : [o.x, o.y], el = toyEls[i];
+    el.style.display = p ? '' : 'none'; if (!p) return;
+    const w = o.w * sc, px = o.k * 25, py = o.k * 30, b = o.blur || 0;
+    const x = Math.min(Math.max(p[0] / 100 * W, 16 + px - w * .1 + b), W - w * .9 - b - 16 - px) - mx * o.k * 50;
+    const y = Math.min(Math.max(p[1] / 100 * H, 16 + py), H - w * .9 - b - 16 - py) - my * py;
+    el.style.width = w + 'px';
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${o.r + (reduce ? 0 : Math.sin(st * (3 + i)) * 4)}deg)`;
+  });
+}
+
+function frame(ms) {
+  requestAnimationFrame(frame);
+  const t = ms / 1000, st = Math.floor(t * 6) / 6;   // st: stop-motion time, 6 steps a second as on the landing
+  T.value = t;
+  mouse.x += (mouse.tx - mouse.x) * .1; mouse.y += (mouse.ty - mouse.y) * .1;
+  moveToys(st);
+  if (!renderer) return;
+  if (!drag && ms - idle > 2500 && !reduce) { tx = Math.sin(t / 1.5) * 6; ty = Math.sin(t / 2.1) * 12; }
+  if (reduce) { ry = base; vy = 0; ax = tx; ay = ty; }
+  else { if (!drag) { vy = (vy + (base - ry) * .06) * .8; ry += vy; } ax += (tx - ax) * .08; ay += (ty - ay) * .08; }
+  card.rotation.set(ax * D, (ry + ay) * D, 0);
+  card.position.y = reduce ? 0 : Math.sin(t * 1.3) * .06;
+
+  // layout: the card floats just above her palm, left of her face. Phones: she is wider than the screen and the card smaller, so it never covers her face
+  const mob = mobile(), sp = mob ? [.34, .47] : [.46, .56];
+  const hH = mob ? viewW(0) * 1.3 / herAr : viewH(0) * .95, wH = hH * herAr, p = at(sp[0], sp[1], 0);
+  her.scale.set(wH, hH, 1);
+  her.position.set(p.x - (HER.palm[0] - .5) * wH, p.y + (HER.palm[1] - .5) * hH, 0);
+  if (!reduce) { her.position.y += Math.sin(st * 1.2) * .05; her.position.x += Math.sin(st * 97.3) * .006; }
+  const zC = 3, c = at(sp[0], sp[1] - .03, zC), k = Math.min((mob ? .55 : .3) * viewW(zC) / CW, (mob ? .3 : .42) * viewH(zC) / CH);
+  const pulse = Math.max(0, 1 - (ms - kick) / 900);
+  cardBase.position.copy(c); cardBase.scale.setScalar(k);
+  orbit.position.copy(c); orbit.scale.setScalar(k * (1 + pulse * .1));
+
+  ring.material.opacity = .7 + pulse * .3; ring2.material.opacity = .3 + pulse * .45;
+  GLOW.value = 1 + pulse * 1.5 + Math.min(1, Math.abs(vy) / 8) * .6;
+  if (!reduce) {
+    ring.rotation.z = t * .25; ring2.rotation.z = -t * .18; dust.rotation.y = mouse.x * .1;
+    for (let i = 0; i < 5; i++) { const a = t * .5 + i * 1.2566; packetPos.set([Math.cos(a) * CW * .72, Math.sin(a) * CW * .72, 0], i * 3); }
+    packetGeo.attributes.position.needsUpdate = true;
+  }
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+
+/* ---------- the form: sent the way index.html sends it. Empty endpoint: demo, nothing leaves the page ---------- */
+const FORM_ENDPOINT = ''; // demo on GitHub Pages: leads are kept in the browser until the backend is connected
+const f = document.getElementById('reserve'), nameIn = f.elements.holder, email = f.elements.contact, btn = f.querySelector('button'), ok = document.getElementById('ok');
+const say = (s, kind) => { ok.replaceChildren(); if (!s) return; const b = document.createElement('b'); b.textContent = s; if (kind) b.className = kind; ok.append(b); };
+document.getElementById('cta').addEventListener('click', e => { e.preventDefault(); (f.hidden ? document.getElementById('turn') : nameIn).focus(); });
+nameIn.addEventListener('focus', () => face(false));
+nameIn.addEventListener('input', () => {
+  const v = nameIn.value.replace(/[^\p{L}\p{M} .'-]/gu, '').replace(/\s{2,}/g, ' ');
+  if (v !== nameIn.value) nameIn.value = v;
+  holder = v.trim().toUpperCase(); drawFront(); face(false); tx = ty = 0; idle = now();
+});
+email.addEventListener('input', () => { if (email.getAttribute('aria-invalid')) { email.removeAttribute('aria-invalid'); say(''); } });
+f.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (btn.disabled) return;
+  const v = email.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+    email.setAttribute('aria-invalid', 'true'); say(v ? 'Enter an email like name@example.com' : 'Enter your email to reserve', 'err'); email.focus(); return;
+  }
+  say('Sending…'); btn.disabled = true;
+  const data = { contact: v, role: 'user', page: ('card' + (holder ? '|name:' + holder : '')).slice(0, 40), ts: new Date().toISOString(), website: f.elements.website.value };
+  let sent = false;
+  try {
+    sent = FORM_ENDPOINT
+      ? (await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })).ok
+      : await new Promise(r => setTimeout(() => r(true), 900));
+  } catch (_) {}
+  btn.disabled = false;
+  if (!sent) { say("Couldn't reserve your card. Press Reserve to try again", 'err'); return; }
+  inLine = true; signed = nameIn.value.trim(); drawBack();
+  f.hidden = true; document.getElementById('turn').focus();
+  say("You're in line ✦ check your email for your Altgirl link", 'done');
+  snap(); base += 540; face(true); kick = idle = now();
+});
+</script>
+</body>
+</html>

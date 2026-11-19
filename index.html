@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>YO:Altgirl · Less apps, more life.</title>
+<meta name="description" content="One chat for your life in any city. Tell Altgirl what you need: the right local agent joins, gets it done and leaves. Get in line for the app and the card.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* визуальный язык v5 Сергея (Devcon): navy + сетка, лайм, моно-подписи, срезанные углы; три размера шрифта */
+html{font-size:clamp(15px,calc(.6vw + 8px),20px)}
+:root{
+  --bg:#141540; --ink:#f6f7fb; --dim:rgba(246,247,251,.82); --faint:rgba(246,247,251,.56);
+  --line:rgba(233,229,255,.14); --panel:rgba(18,19,58,.92); --lime:#d1f931; --violet:#5b45f0; --violet2:#6b57f6;
+  --grad:linear-gradient(90deg,var(--lime),var(--violet2));
+  --mono:"Geist Mono",ui-monospace,monospace; --sans:"Geist",system-ui,-apple-system,sans-serif;
+  --xl:clamp(2.4rem,5.4vw,4.6rem); --m:1.0625rem; --s:.8125rem; --pad:2rem;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{color:var(--ink);font:400 var(--m)/1.5 var(--sans);overflow-x:hidden;background:transparent}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;font-size:var(--s)}
+.backdrop{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(38rem 30rem at 50% 52%,rgba(91,69,240,.32),transparent 70%),
+  radial-gradient(30rem 26rem at 6% 12%,rgba(107,87,246,.38),transparent 70%),
+  radial-gradient(26rem 22rem at 94% 10%,rgba(255,122,217,.2),transparent 70%),
+  radial-gradient(24rem 20rem at 10% 92%,rgba(209,249,49,.12),transparent 70%),var(--bg)}
+.grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(107,87,246,.16) 1px,transparent 1px) 0 0/calc(100% / 24) 100%,linear-gradient(rgba(107,87,246,.16) 1px,transparent 1px) 0 0/100% calc(100vw / 24)}
+
+.wrap{max-width:72rem;margin:0 auto;padding-left:max(var(--pad),env(safe-area-inset-left));padding-right:max(var(--pad),env(safe-area-inset-right))}
+@media(max-width:700px){:root{--pad:1.1rem}}
+h1,h2{font-size:var(--xl);font-weight:600;letter-spacing:-.04em;line-height:1.02;text-wrap:balance}
+.hl{background:var(--lime);color:var(--bg);padding:0 .18em;display:inline-block;transform:skew(-6deg);margin-right:.05em}
+.hl>span{display:inline-block;transform:skew(6deg)}
+h3{font-size:var(--m);font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.dim{color:var(--dim)} .faint{color:var(--faint)}
+.k{color:var(--lime)}
+section{padding-block:7rem;position:relative}
+@media(max-width:700px){section{padding-block:5rem}}
+.head{display:grid;gap:1rem;max-width:44rem;margin-bottom:3rem}
+.panel{background:var(--panel);border:1px solid var(--line);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.tag{display:inline-flex;align-items:center;gap:.4rem;justify-self:start;align-self:start;padding:.35rem .6rem;border:1px solid var(--line)}
+.tag.live{color:var(--lime);border-color:rgba(209,249,49,.4)} .tag.live:before{content:"";width:.45rem;height:.45rem;border-radius:50%;background:var(--lime)}
+.tag.build{color:#b9adff;border-color:rgba(107,87,246,.5)}
+.tag.plan{color:var(--faint)}
+
+/* header */
+header{position:sticky;top:0;z-index:20;height:4rem;display:flex;align-items:center;border-bottom:1px solid var(--line);background:rgba(20,21,64,.7);backdrop-filter:blur(12px)}
+header .wrap{display:flex;align-items:center;gap:2rem;width:100%;max-width:none}
+.mark{display:block;width:3.06rem;height:1.9rem;background:var(--lime);-webkit-mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat;mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat}
+header nav{display:flex;gap:2rem;margin-left:auto}
+header nav a{color:var(--dim)} header nav a:hover{color:var(--lime)}
+.cta{display:inline-flex;gap:.6rem;align-items:center;justify-content:center;padding:.8rem 1.2rem;border:1.5px solid transparent;cursor:pointer;color:var(--ink);font:500 var(--s)/1 var(--mono);text-transform:uppercase;letter-spacing:.04em;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:background .25s,color .25s}
+.cta:hover{background:var(--grad) padding-box,var(--grad) border-box;color:var(--bg)}
+.cta.solid{background:var(--lime);color:var(--bg);border-color:var(--lime)}
+.cta.solid:hover{background:#e2ff6a}
+.cta:focus-visible,.chip:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+@media(max-width:700px){header nav{display:none}header .cta{margin-left:auto}}
+
+/* hero */
+.hero{padding-block:4rem 5rem}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.hero-txt{display:grid;gap:1.4rem;min-width:0}
+.hero-txt>p.lead{max-width:32rem;color:var(--dim)}
+.hero-pic{position:relative;min-height:38rem;display:grid;place-items:end center}
+.hero-pic img{height:38rem;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 30px 50px rgba(0,0,0,.45))}
+.bub{position:absolute;display:grid;gap:.5rem;width:min(19rem,90%)}
+.bub.a{bottom:2.5rem;left:0}
+.msg{font-size:var(--s);line-height:1.45;padding:.6rem .85rem;max-width:100%}
+.msg.me{justify-self:end;background:var(--violet);color:#fff}
+.msg.her{background:var(--panel);border:1px solid var(--line)}
+.msg.sys{justify-self:center;color:var(--faint);font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;padding:.2rem}
+.msg.tap{justify-self:start;background:var(--lime);color:var(--bg);font-weight:600}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero-pic{min-height:24rem}.hero-pic img{height:24rem}.bub.a{bottom:1rem}}
+
+/* form */
+.join{display:grid;gap:1rem;padding:1.25rem;max-width:34rem}
+.join label.q{color:var(--dim)}
+.join input[type=email],.join input[type=text]{width:100%;font:400 var(--m)/1 var(--sans);padding:.95rem 1rem;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink)}
+.join input::placeholder{color:var(--faint)}
+.join input.err{border-color:#ff6b6b}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font:500 var(--s)/1 var(--mono);text-transform:uppercase;letter-spacing:.04em;padding:.6rem .8rem;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--lime);border-color:var(--lime);color:var(--bg)}
+.card-opt{display:flex;gap:.75rem;align-items:flex-start;padding:.85rem;border:1px solid rgba(209,249,49,.35);background:rgba(209,249,49,.06);cursor:pointer}
+.card-opt input{width:1.1rem;height:1.1rem;margin-top:.15rem;accent-color:var(--lime);flex:none}
+.card-opt b{display:block;font-weight:600}
+.card-opt span{font-size:var(--s);color:var(--dim);line-height:1.45}
+.join .cta{width:100%;padding:1rem}
+.hp{position:absolute;left:-9999px}
+.ok{display:none;gap:.5rem;padding:1.5rem;max-width:34rem}
+.ok.show{display:grid}
+.fine{font-size:var(--s);color:var(--faint)}
+
+/* problem */
+.prob .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.applist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+.applist div{aspect-ratio:1;display:grid;place-items:center;text-align:center;color:var(--faint);position:relative;padding:.5rem;font-family:var(--mono);font-size:var(--s);text-transform:uppercase}
+.applist i{position:absolute;top:.5rem;right:.5rem;background:#ff4d6d;color:#fff;font:600 .7rem/1 var(--sans);font-style:normal;border-radius:999px;padding:.25rem .45rem}
+.prob .pose{position:absolute;right:2%;bottom:-2rem;height:14rem;width:auto;opacity:.95;pointer-events:none}
+@media(max-width:860px){.prob .wrap{grid-template-columns:1fr}.prob .pose{display:none}}
+
+/* cases */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+.case{display:grid;gap:1rem;align-content:start;padding:1.25rem}
+.chat{display:grid;gap:.5rem}
+@media(max-width:900px){.cases{grid-template-columns:1fr}}
+.note{margin-top:1.5rem}
+
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+.step{display:grid;gap:.6rem;align-content:start;padding-top:1rem;border-top:1px solid var(--lime)}
+@media(max-width:760px){.steps{grid-template-columns:1fr}}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:3rem}
+.pair>div{display:grid;gap:.6rem;align-content:start;padding:1.5rem}
+@media(max-width:760px){.pair{grid-template-columns:1fr}}
+
+/* card */
+.cardsec .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
+.cardsec ul{list-style:none;display:grid;gap:.85rem}
+.cardsec li{display:grid;grid-template-columns:1.2rem 1fr;gap:.6rem}
+.cardsec li:before{content:"✦";color:var(--lime)}
+.cardvis{position:relative;min-height:26rem}
+.plastic{position:absolute;left:0;bottom:2rem;width:min(22rem,80%);aspect-ratio:1.586;border-radius:1.1rem;background:linear-gradient(135deg,#22236a,#5b45f0 55%,#d1f931);box-shadow:0 30px 60px rgba(0,0,0,.45);transform:rotate(-8deg)}
+.plastic .lg{position:absolute;left:1.2rem;top:1rem;width:3rem;height:1.9rem;background:#fff;-webkit-mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat;mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat}
+.plastic .chipm{position:absolute;left:1.2rem;top:4rem;width:2.4rem;height:1.8rem;border-radius:.35rem;background:linear-gradient(135deg,#E8E2B8,#B9A55B)}
+.plastic .num{position:absolute;left:1.2rem;bottom:1.1rem;font:500 var(--s)/1 var(--mono);letter-spacing:.12em;color:#fff}
+.cardvis img{position:absolute;right:-1rem;top:0;height:22rem;width:auto;max-width:none;filter:drop-shadow(0 30px 50px rgba(0,0,0,.45))}
+@media(max-width:860px){.cardsec .wrap{grid-template-columns:1fr}.cardvis{min-height:20rem}.cardvis img{height:17rem;right:0}}
+
+/* cities */
+.cities{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
+.city{display:grid;gap:.6rem;align-content:start;padding:1.1rem}
+@media(max-width:760px){.cities{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* faq */
+.faq{max-width:48rem;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);padding-block:1.1rem}
+.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--lime);font-family:var(--mono)}
+.faq details[open] summary:after{content:"–"}
+.faq details p{margin-top:.6rem;color:var(--dim)}
+
+.final .wrap{display:grid;gap:1.5rem;justify-items:center;text-align:center}
+.final img{height:16rem;width:auto}
+footer{padding-block:2.5rem 5rem;border-top:1px solid var(--line)}
+footer .wrap{display:grid;gap:.6rem}
+footer a{text-decoration:underline;text-underline-offset:3px}
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:.6rem max(1rem,env(safe-area-inset-left)) calc(.6rem + env(safe-area-inset-bottom));background:rgba(20,21,64,.92);border-top:1px solid var(--line);display:none}
+.sticky .cta{width:100%}
+@media(max-width:760px){.sticky.on{display:block}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Альтуха стоит справа и меняет позу на каждом экране: быстрый поворот (профиль → спина → анфас), затем новая поза — как в v5 Сергея */
+.mascot{position:fixed;right:max(1rem,2vw);bottom:0;width:38vw;height:calc(100vh - 4rem);z-index:0;pointer-events:none;display:flex;align-items:flex-end;justify-content:center}
+.mascot:before{content:"";position:absolute;left:50%;bottom:8%;width:85%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;border:1px solid rgba(209,249,49,.35);box-shadow:inset 0 0 80px rgba(91,69,240,.35);background:radial-gradient(circle,rgba(91,69,240,.28),transparent 70%)}
+.mascot img{position:relative;max-height:86%;max-width:100%;width:auto;object-fit:contain;filter:drop-shadow(0 30px 50px rgba(0,0,0,.45));transition:transform .25s}
+.mascot img.pop{animation:pop .35s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{from{transform:translateY(12px) scale(.97)}to{transform:none}}
+section,header,footer{position:relative;z-index:2}
+@media(min-width:1000px){
+  section .wrap,footer .wrap{padding-right:calc(33vw + 1rem);max-width:none;margin-left:max(2rem,calc((100vw - 82rem)/2))}
+  .hero .wrap{grid-template-columns:1fr}
+  .hero-pic{position:absolute;right:max(1rem,3vw);top:3rem;min-height:0;width:min(21rem,28vw)}
+  .hero-pic .bub.a{position:static}
+  .prob .wrap,.cardsec .wrap{grid-template-columns:1fr 1fr}
+  .final .wrap{justify-items:start;text-align:left}
+}
+@media(max-width:999px){
+  .mascot{width:34vw;height:46vw;right:0;bottom:calc(4.2rem + env(safe-area-inset-bottom));opacity:.97}
+  .mascot:before{display:none}
+  .hero-pic{min-height:0}
+}
+.campaign{width:100%;max-width:26rem;height:auto;justify-self:center}
+.banner{width:100%;max-width:40rem;height:auto;border-radius:1rem}
+.cardvis{min-height:16rem}
+.plastic{position:relative;left:auto;bottom:auto;margin-top:2rem}
+@media(prefers-reduced-motion:reduce){.mascot img.pop{animation:none}}
+
+/* один экран — одна мысль */
+.slide{min-height:88vh;display:flex;align-items:center}
+.slide>.wrap{width:100%}
+.one{display:grid;gap:1.2rem;max-width:40rem}
+.one>p.dim{max-width:30rem}
+.solo{max-width:26rem}
+.citynames{display:flex;flex-wrap:wrap;gap:.6rem}
+.citynames span{font:500 var(--m)/1 var(--mono);text-transform:uppercase;letter-spacing:.04em;padding:.8rem 1rem;border:1px solid var(--line);background:var(--panel)}
+.citynames span.you{border-color:var(--lime);color:var(--lime)}
+.slide .plastic{position:relative;left:auto;bottom:auto;margin:1rem 0 0;width:min(22rem,90%)}
+
+/* единый масштаб: высота позы = доля роста во весь рост; обрезанные позы стоят на нижнем крае */
+.mascot{align-items:flex-end}
+.mascot img#pose{position:relative;z-index:1;height:var(--h,78vh);max-height:none;max-width:34vw;width:auto;object-fit:contain;object-position:bottom center;margin-bottom:var(--mb,2vh)}
+/* y2k-игрушки за девочкой: плавают и чуть вращаются, дальние мягче и меньше */
+.toys{position:absolute;inset:0;z-index:0}
+.toys img{position:absolute;width:var(--w);height:auto;max-width:none;animation:float var(--d,7s) ease-in-out infinite;animation-delay:var(--dl,0s);filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.toys .t1{--w:4.6rem;left:2%;top:18%;--d:6s}
+.toys .t2{--w:5.2rem;right:0;top:30%;--d:8s;--dl:-2s}
+.toys .t3{--w:4.4rem;left:10%;top:44%;--d:7s;--dl:-4s}
+.toys .t4{--w:2.2rem;left:46%;top:10%;--d:5s;filter:blur(.5px)}
+.toys .t5{--w:3.4rem;right:6%;top:62%;--d:9s;--dl:-3s}
+.toys .t6{--w:3rem;left:4%;top:70%;--d:6.5s;--dl:-1s;filter:blur(1px);opacity:.85}
+.toys .t7{--w:5.6rem;right:14%;top:8%;--d:10s;--dl:-5s;filter:blur(1.5px);opacity:.8}
+.toys .t8{--w:2.6rem;left:2%;top:36%;--d:7.5s;--dl:-2.5s}
+.toys .t9{--w:1.8rem;right:24%;top:46%;--d:4.5s;--dl:-1.5s;opacity:.9}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+@media(max-width:999px){.toys img{--w:2.2rem !important}.toys .t3,.toys .t6,.toys .t7,.toys .t9{display:none}.mascot img#pose{max-width:34vw}}
+@media(prefers-reduced-motion:reduce){.toys img{animation:none}}
+
+.linkbtn{background:none;border:0;color:var(--lime);font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
+.codewrap input{width:100%;font:400 var(--m)/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:.95rem 1rem;border:1px solid var(--lime);background:rgba(209,249,49,.06);color:var(--ink)}
+.lead b{color:var(--ink);font-weight:600}
+
+
+/* интерфейс Альтухи по скрину приложения: лаванда→белый→лайм внизу, аватар, круглые кнопки, свои сообщения — фиолетовые пузыри, её — просто текст, карточки с иконкой */
+.phone{width:min(17rem,100%);aspect-ratio:9/18;border-radius:2.8rem;padding:.35rem;background:#e6e6f0;box-shadow:0 30px 70px rgba(0,0,0,.45),inset 0 0 0 1px #fff;margin-top:.5rem}
+.scr{height:100%;border-radius:2.5rem;overflow:hidden;display:flex;flex-direction:column;color:#16172e;font-family:var(--sans);
+  background:linear-gradient(180deg,rgba(214,210,255,.9) 0%,#f4f4fa 22%,#f4f4fa 78%,#eef6d2 100%)}
+.ptop{display:flex;align-items:center;gap:.45rem;padding:1.6rem 1rem .5rem}
+.ptop img{width:2.6rem;height:2.6rem;border-radius:50%;object-fit:cover;object-position:center 15%;box-shadow:0 4px 12px rgba(20,21,46,.15)}
+.ptop .sp{flex:1}
+.ptop .ib{width:2.1rem;height:2.1rem;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 12px rgba(20,21,46,.12);color:#16172e}
+.ptop .ib svg{width:1rem;height:1rem}
+.ptop .ib:first-of-type{color:#b9b9cf}
+.thread{flex:1;display:flex;flex-direction:column;gap:.55rem;padding:.6rem 1rem;overflow:hidden}
+.m{font-size:.8rem;line-height:1.35;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.phone.go .m{opacity:1;transform:none}
+.m.me{align-self:flex-end;max-width:78%;background:#5b45f0;color:#fff;padding:.6rem .85rem;border-radius:1.1rem 1.1rem .3rem 1.1rem}
+.m.her{align-self:flex-start;max-width:92%;color:#16172e}
+.m.stp{color:#6b6b85;font-size:.72rem}
+.m.stp b{font-weight:400;margin-left:.3rem}
+.m.card{display:flex;gap:.65rem;align-items:center;background:#fff;border-radius:1rem;padding:.6rem .7rem;box-shadow:0 4px 14px rgba(20,21,46,.07)}
+.m.card i{flex:none;width:2rem;height:2rem;border-radius:50%;background:#ebe8ff;color:#5b45f0;display:grid;place-items:center}
+.m.card i svg{width:1rem;height:1rem}
+.m.card b{display:block;font-size:.82rem;font-weight:650}
+.m.card span{font-size:.68rem;color:#6b6b85}
+.pin{margin:.5rem .7rem .9rem;background:#fff;border-radius:999px;padding:.35rem;display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:#9a9ab0;box-shadow:0 4px 14px rgba(20,21,46,.08)}
+.pin span{flex:1}
+.pin i{flex:none;width:1.8rem;height:1.8rem;border-radius:50%;display:grid;place-items:center;font-style:normal}
+.pin .pl{background:#ececf3;color:#16172e;font-size:1.1rem}
+.pin .mic{background:#ececf3;color:#16172e}.pin .mic svg{width:.9rem;height:.9rem}
+.pin .send{background:#b4a9ff;color:#fff;font-weight:700}
+@media(prefers-reduced-motion:reduce){.m{opacity:1;transform:none;transition:none}}
+
+/* как у Сергея: сфера, орбиты, колонки, рамка заголовка, статусы, лаймовая тень, зерно */
+.globe{position:absolute;left:50%;bottom:10%;width:88%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,rgba(91,69,240,.35),rgba(91,69,240,.08) 62%,transparent 70%),
+  radial-gradient(circle,rgba(255,255,255,.55) .6px,transparent 1.2px) 0 0/14px 14px;
+  -webkit-mask:radial-gradient(circle closest-side,#000 92%,transparent 100%);mask:radial-gradient(circle closest-side,#000 92%,transparent 100%);border-radius:50%;
+  box-shadow:inset 0 0 0 1px rgba(107,87,246,.5)}
+.mascot:before{display:none}
+.orbits{position:absolute;left:-12%;bottom:4%;width:124%;height:auto;overflow:visible;z-index:0;pointer-events:none;animation:orb 6s ease-in-out infinite}
+.orbits ellipse{fill:none;stroke:rgba(209,249,49,.55);stroke-width:1.4}
+.orbits ellipse+ellipse{stroke:rgba(209,249,49,.3)}
+@keyframes orb{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+.grid i{position:absolute;top:0;bottom:0;width:1px;background:rgba(233,229,255,.12)}
+.grid i:nth-child(1){left:16.667%}.grid i:nth-child(2){left:50%}.grid i:nth-child(3){left:83.333%}
+h1{font-size:clamp(3rem,7.4vw,7rem)}
+h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--violet2);box-shadow:-6px -6px 0 -4.5px var(--lime)}
+.hud{position:absolute;right:max(1rem,2vw);bottom:9vh;z-index:3;display:grid;gap:.6rem;justify-items:end}
+.hud .st{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem .8rem;background:var(--panel);border:1px solid var(--line)}
+.hud .st i{width:.45rem;height:.45rem;border-radius:50%;background:var(--lime)}
+.hud .st.lime{border-color:var(--lime);color:var(--lime)}
+.join.panel,.phone{box-shadow:.5rem .5rem 0 var(--lime)}
+.phone{box-shadow:.6rem .6rem 0 var(--lime),0 30px 70px rgba(0,0,0,.45)}
+.k.dot{display:inline-flex;align-items:center;gap:.5rem}
+.k.dot:before{content:"";width:.45rem;height:.45rem;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+.launch{padding:.55rem .8rem;border:1.5px solid var(--lime);color:var(--lime);clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+.backdrop::after{content:"";position:absolute;inset:0;opacity:.09;mix-blend-mode:overlay;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.toys .t2{--w:7rem;filter:blur(3px);opacity:.9}
+@media(max-width:999px){.hud,.orbits,.launch{display:none}h1{font-size:clamp(2.6rem,11vw,3.6rem)}}
+@media(prefers-reduced-motion:reduce){.orbits{animation:none}}
+
+/* слайд карты: живая сцена со страницы карты на фоне, УТП в панели слева */
+.cardscene{height:100vh;min-height:40rem;overflow:hidden}
+.scene{position:absolute;inset:0;z-index:-1}
+.scene iframe{width:100%;height:100%;border:0;pointer-events:none;
+  -webkit-mask:linear-gradient(90deg,transparent 18%,#000 40%);mask:linear-gradient(90deg,transparent 18%,#000 40%)}
+.usp{max-width:30rem;padding:1.6rem;box-shadow:.5rem .5rem 0 var(--lime)}
+.visa{font:800 italic clamp(3.5rem,7vw,6rem)/.9 var(--sans);letter-spacing:-.03em;color:var(--ink);-webkit-text-stroke:0}
+.ulist{list-style:none;display:grid;gap:.75rem}
+.ulist li{display:flex;gap:.5rem;align-items:flex-start;color:var(--dim)}
+.ulist li:before{content:"✦";color:var(--lime)}
+.ulist b{color:var(--ink);font-weight:600}
+.mascot{transition:opacity .4s}
+.mascot.off{opacity:0}
+@media(max-width:999px){.scene iframe{-webkit-mask:linear-gradient(180deg,#000 55%,transparent 85%);mask:linear-gradient(180deg,#000 55%,transparent 85%)}.cardscene .wrap{padding-top:55vh}}
+
+/* карта как у Сергея: голостекло, срезанный угол, фольга, лаймовый чип и дорожки */
+.ycard{display:block;width:min(30rem,100%);height:auto;margin:1rem 0 .4rem;transform:rotate(-6deg);filter:drop-shadow(0 30px 50px rgba(0,0,0,.5));animation:cardfloat 6s ease-in-out infinite}
+@keyframes cardfloat{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-8px)}}
+@media(prefers-reduced-motion:reduce){.ycard{animation:none}}
+
+.glasswrap{position:relative;width:min(30rem,100%);margin:1rem 0 .4rem;animation:cardfloat 6s ease-in-out infinite}
+.glasswrap:before{content:"";position:absolute;inset:3% 2%;border-radius:1.4rem;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);transform:rotate(-6deg);z-index:-1}
+.glasswrap .ycard{margin:0;width:100%;animation:none;transform:rotate(-6deg);filter:drop-shadow(0 20px 40px rgba(0,0,0,.25))}
+@keyframes cardfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.xbtn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem;border:1px solid var(--line);color:var(--ink)}.xbtn:hover{border-color:var(--ink)}
+.cdev{padding:.85rem 1rem;border:1px dashed rgba(209,249,49,.55);background:rgba(209,249,49,.06);color:var(--dim);font-size:.95rem;line-height:1.45}.cdev b{color:var(--lime);font-weight:600}
+
+.duo{display:flex;gap:1.5rem;align-items:flex-end;flex-wrap:wrap}
+.friends{display:grid;gap:.8rem;padding:1.2rem;max-width:19rem;align-self:center}
+.fchat{display:grid;gap:.45rem}
+.fchat .msg{font-size:.8rem}
+@media(max-width:999px){.friends{max-width:none;width:100%}}
+.joinbox{margin-top:.6rem}.joinbox .join{max-width:none}
+#join{scroll-margin-top:5rem}
+.oneapp{font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:600;letter-spacing:-.02em;color:var(--lime)}
+
+.shots{position:absolute;right:max(1rem,3vw);top:7rem;width:42vw;height:80vh;pointer-events:none;z-index:1}
+.shots img{position:absolute;height:72vh;width:auto;max-width:none;border-radius:2rem;box-shadow:0 30px 70px rgba(0,0,0,.5),.6rem .6rem 0 var(--lime)}
+.shots .s1{left:0;top:0;transform:rotate(-4deg)}
+.shots .s2{right:0;bottom:0;transform:rotate(4deg)}
+.shots span{position:absolute;right:0;bottom:-1.6rem;color:var(--faint)}
+@media(max-width:999px){.shots{position:relative;transform:none;top:auto;right:auto;width:100%;height:auto;display:flex;gap:1rem;justify-content:center;margin-top:2rem;order:2}.shots img{position:static;height:22rem;transform:none!important}.shots span{display:none}}
+
+.handcard{position:fixed;right:30vw;top:26vh;width:min(19rem,22vw);z-index:1;pointer-events:none;opacity:0;transform:translateY(20px) rotate(4deg);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.handcard.on{opacity:1;transform:none}
+.handcard .glasswrap{width:100%;margin:0}
+@media(max-width:999px){.handcard{display:none}}
+
+.errands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;max-width:38rem}
+.errands .panel{display:grid;gap:.35rem;padding:1rem;align-content:start}
+.errands .ico{color:var(--lime);width:1.8rem;height:1.8rem}.errands .ico svg{width:100%;height:100%}
+.errands b{font-size:1.05rem}
+.errands .res{color:var(--dim);font-size:.9rem;line-height:1.35}
+.errands .tag{margin-top:.3rem}
+@media(max-width:560px){.errands{grid-template-columns:1fr}}
+.steps-shot{width:min(22rem,100%);height:auto;border-radius:1.4rem;box-shadow:.6rem .6rem 0 var(--lime),0 30px 60px rgba(0,0,0,.45)}
+
+.usual{display:grid;gap:.7rem;padding:1rem;max-width:26rem;background:rgba(18,19,58,.95)}
+.u-her{display:flex;gap:.6rem;align-items:flex-start}
+.u-her img{width:2.2rem;height:2.2rem;border-radius:50%;object-fit:cover;object-position:center 15%;flex:none}
+.u-her p{font-size:.95rem;line-height:1.4;color:var(--ink)}
+.u-her b{color:var(--lime);font-weight:600}
+.u-me{justify-self:end;background:var(--lime);color:var(--bg);padding:.6rem .9rem;border-radius:1rem 1rem .3rem 1rem;font-size:.95rem;font-weight:500}
+.u-ok{display:flex;gap:.6rem;align-items:center;padding:.7rem .8rem;border:1px solid rgba(107,87,246,.6);border-radius:.8rem;font-size:.85rem;color:var(--dim)}
+.u-ok i{font-style:normal;width:1.4rem;height:1.4rem;border-radius:50%;background:var(--lime);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
+</style>
+<!-- PostHog: pageviews only on yo.finance (no autocapture, no recordings); URLs are sent without query and hash. -->
+<script>
+(function(){
+  var TOKEN='phc_xhJ2Zke7VY6v2Wu2rTRqrAngTn7QF6ebRUGC5bhqfhyF', HOST='https://eu.i.posthog.com', HOSTS=['yo.finance','www.yo.finance'];
+  if(HOSTS.indexOf(location.hostname)<0) return;
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset identify alias people.set people.set_once set_config get_distinct_id get_property".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  function bare(u){try{u=new URL(u);return u.origin+u.pathname}catch(e){return u}}
+  posthog.init(TOKEN,{
+    api_host:HOST, person_profiles:'identified_only',
+    capture_pageview:true, capture_pageleave:true, autocapture:false,
+    disable_session_recording:true, disable_surveys:true,
+    before_send:function(ev){var p=ev&&ev.properties;if(p){['$current_url','$referrer','$initial_current_url','$initial_referrer'].forEach(function(k){if(typeof p[k]==='string')p[k]=bare(p[k])})}return ev}
+  });
+})();
+</script>
+</head>
+<body>
+<div class="backdrop"></div><div class="grid"><i></i><i></i><i></i></div>
+<div class="mascot" aria-hidden="true">
+  <div class="globe"></div>
+  <svg class="orbits" viewBox="0 0 600 600"><ellipse cx="300" cy="330" rx="290" ry="95" transform="rotate(-8 300 330)"/><ellipse cx="300" cy="330" rx="270" ry="120" transform="rotate(14 300 330)"/></svg>
+  <div class="toys">
+    <img class="t1" src="assets/toys/obj-star.webp" alt=""><img class="t2" src="assets/toys/obj-heart.webp" alt="">
+    <img class="t3" src="assets/toys/obj-bubble.webp" alt=""><img class="t4" src="assets/toys/obj-sparkle.webp" alt="">
+    <img class="t5" src="assets/toys/obj-smiley.webp" alt=""><img class="t6" src="assets/toys/obj-coin.webp" alt="">
+    <img class="t7" src="assets/toys/obj-flower.webp" alt=""><img class="t8" src="assets/toys/obj-cursor.webp" alt="">
+    <img class="t9" src="assets/toys/obj-sparkle.webp" alt="">
+  </div>
+  <img id="pose" src="assets/poses-trim/phone.webp" alt="">
+</div>
+
+<header><div class="wrap">
+  <a href="#top" aria-label="YO:Labs"><span class="mark"></span></a>
+  <a class="launch mono" href="https://altgirl.yo.finance">Launch app</a>
+  <nav class="mono"><a href="#chat">One chat</a><a href="card.html">Card</a><a href="#faq">FAQ</a></nav>
+  <a class="cta" href="#join">:: Get in line</a>
+</div></header>
+
+<!-- 1. что это -->
+<section class="hero slide" id="top" data-pose="phone">
+<div class="hud" aria-hidden="true"><span class="mono st"><i></i>Task done</span><span class="mono st lime">Court 2 at 7:00 · ride at 6:35 ✓</span></div>
+<div class="wrap">
+  <div class="hero-txt">
+    <p class="mono k dot">YO:Altgirl · invite only</p>
+    <h1><span class="box">Less apps,</span><br><span class="hl"><span>more life.</span></span></h1>
+    
+    <p class="lead"><b>Altgirl is an app with an AI assistant that gets things done for you in a new city.</b> She reserves a padel court, calls a ride, orders food and remembers what matters. One chat instead of a dozen apps.</p>
+    <p class="lead" style="font-size:1rem">Invite only. No code? Reserve the card and you’re in today.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap"><a class="cta solid" href="#join">Join the waitlist ↓</a><a class="cta" href="#chat">See how it works</a></div>
+  </div>
+</div></section>
+
+<!-- 4. не замена ChatGPT -->
+<section class="slide" data-pose="turn-01"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">Not another chatbot</p>
+    <h2>ChatGPT for work. <span class="hl"><span>Altgirl for life.</span></span></h2>
+    <p class="oneapp">Your one app to get things done.</p>
+    <p class="dim">Keep your chatbot for work. When you close the laptop, she takes over.</p>
+  </div>
+</div></section>
+
+
+<!-- 2. боль -->
+<section class="prob slide" data-pose="run"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">The problem</p>
+    <h2>Six apps to get to <span class="hl"><span>one padel game.</span></span></h2>
+  </div>
+  <div class="applist" aria-label="Apps you juggle today">
+    <div class="panel">Courts<i>3</i></div><div class="panel">Group chat<i>47</i></div><div class="panel">Ride</div>
+    <div class="panel">Weather</div><div class="panel">Calendar<i>2</i></div><div class="panel">Reminders<i>5</i></div>
+  </div>
+</div></section>
+
+<!-- 3. решение: одно сообщение -->
+<section class="slide" id="chat" data-pose="padel"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">One chat</p>
+    <h2>Say it once. <span class="hl"><span>It’s handled.</span></span></h2>
+    <div class="duo">
+    <div class="phone" aria-label="Altgirl app: padel tomorrow evening, three games to pick from">
+      <div class="scr">
+        <div class="ptop"><img src="assets/app-avatar.webp" alt=""><span class="sp"></span><i class="ib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></i><i class="ib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></i><i class="ib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/><path d="M12 8v4l3 2"/></svg></i></div>
+        <div class="thread">
+          <p class="m me">I want a training tomorrow evening</p>
+          <p class="m her">what kind: padel, running or yoga?</p>
+          <p class="m me">Padel, after 18:00</p>
+          <p class="m stp">1 step <b>›</b></p>
+          <p class="m her">three padel games after 18:00, pick one:</p>
+          <div class="m card"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5.5 6.5c3 2.5 3 8.5 0 11M18.5 6.5c-3 2.5-3 8.5 0 11"/></svg></i><div><b>Padel, tomorrow 18:30</b><span>3 of 4 signed up, $8</span></div></div>
+          <div class="m card"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5.5 6.5c3 2.5 3 8.5 0 11M18.5 6.5c-3 2.5-3 8.5 0 11"/></svg></i><div><b>Padel, tomorrow 19:30</b><span>2 of 4 signed up, $8</span></div></div>
+          <div class="m card"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5.5 6.5c3 2.5 3 8.5 0 11M18.5 6.5c-3 2.5-3 8.5 0 11"/></svg></i><div><b>Padel, tomorrow 20:30</b><span>1 of 4 signed up, indoor, $10</span></div></div>
+        </div>
+        <div class="pin"><i class="pl">+</i><span>tell me what you need</span><i class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></i><i class="send">↑</i></div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 3d. дела в городе: три плитки, одна строка -->
+<section class="slide" data-pose="wave-phone"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">Real life, handled</p>
+    <h2>Dinner, taxi, visa run. <span class="hl"><span>You name it, it’s done.</span></span></h2>
+    <img class="steps-shot" src="assets/app-3steps.webp" alt="One message to Altgirl: padel court, taxi there and back and dinner after the game, all done in three steps" width="740" height="1126" loading="lazy">
+    <p class="fine">Padel and rides are live. Food and visa runs are coming.</p>
+    <p class="dim">Your chatbot answers. She gets it done.</p>
+  </div>
+</div></section>
+
+
+<!-- 5. приватность -->
+<section class="slide" data-pose="sit"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">Only yours</p>
+    <h2>She learns from you. <span class="hl"><span>Only you.</span></span></h2>
+    <p class="dim">She knows your court and your time before you ask. It stays on your phone. Never sold.</p>
+    <div class="usual panel">
+      <div class="u-her"><img src="assets/app-avatar.webp" alt=""><p>padel’s done at 19:30. the usual pho from <b>your spot by the beach</b> to your apartment after?</p></div>
+      <div class="u-me">yes, same as always</div>
+      <div class="u-ok"><i>✓</i>Food order placed · delivery to your apartment, ~20:00</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 6. карта -->
+<section class="slide" id="card" data-pose="reach"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">The card · planned for early Q2 2027</p>
+    <h2>Every swipe makes her <span class="hl"><span>smarter.</span></span></h2>
+    <p class="dim">An assistant with her own card: you spend, or she pays for you on your limits.</p>
+    <div class="glasswrap"><svg class="ycard" viewBox="0 0 1000 630" role="img" aria-label="YO:Altgirl card">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".09"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/><stop offset="1" stop-color="#e9e5ff" stop-opacity=".08"/></linearGradient><linearGradient id="shine" x1="0" y1="0" x2=".6" y2=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="holo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4fd6e8"/><stop offset=".3" stop-color="#d1f931"/><stop offset=".55" stop-color="#ff7ad9"/><stop offset=".8" stop-color="#8b6dff"/><stop offset="1" stop-color="#4fd6e8"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1f931"/><stop offset=".5" stop-color="#ff7ad9" stop-opacity=".6"/><stop offset="1" stop-color="#6b57f6"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="cut"><path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#cut)">
+    <rect width="1000" height="630" fill="url(#glass)"/>
+        <polygon points="0,379.5 25,370.9 50,363.1 75,356.4 100,350.8 125,346.4 150,343.3 175,341.4 200,340.7 225,341.2 250,342.7 275,345.1 300,348.2 325,352.0 350,356.1 375,360.3 400,364.5 425,368.4 450,371.8 475,374.6 500,376.5 525,377.4 550,377.2 575,375.8 600,373.2 625,369.3 650,364.2 675,357.9 700,350.6 725,342.4 750,333.3 775,323.7 800,313.6 825,303.4 850,293.2 875,283.2 900,273.7 925,264.8 950,256.8 975,249.7 1000,243.6 1000,299.7 975,305.8 950,313.5 925,322.8 900,333.4 875,344.9 850,357.0 825,369.5 800,381.7 775,393.5 750,404.4 725,414.2 700,422.6 675,429.4 650,434.7 625,438.2 600,440.2 575,440.6 550,439.8 525,437.9 500,435.1 475,431.8 450,428.1 425,424.4 400,420.8 375,417.5 350,414.6 325,412.4 300,410.7 275,409.8 250,409.5 225,410.0 200,411.1 175,412.8 150,415.3 125,418.3 100,422.0 75,426.3 50,431.4 25,437.1 0,443.5" fill="url(#holo)" opacity=".6"/>
+    
+  </g>
+  <path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+  <text x="56" y="104" font-family="Geist,Inter,sans-serif" font-weight="800" font-size="74" font-style="italic" fill="#f6f7fb" letter-spacing="-3">yo</text>
+  <text x="890" y="76" text-anchor="end" font-family="Geist Mono,monospace" font-size="22" fill="#f6f7fb" letter-spacing="3">PERSONAL AGENT CARD</text>
+  <text x="890" y="106" text-anchor="end" font-family="Geist Mono,monospace" font-size="18" fill="#d1f931" letter-spacing="3">HOLOGLASS · VIRTUAL</text>
+  <g filter="url(#glow)" stroke="rgba(209,249,49,.75)" stroke-width="2.5" fill="none">
+    <polyline points="178,290 430,290 470,250 700,250"/><circle cx="700" cy="250" r="5" fill="#d1f931"/>
+    <polyline points="178,302 380,302 420,342 610,342"/><circle cx="610" cy="342" r="5" fill="#d1f931"/>
+    <polyline points="122,306 122,352 300,352"/><circle cx="300" cy="352" r="5" fill="#d1f931"/>
+  </g>
+  <rect x="66" y="220" width="112" height="86" rx="14" fill="rgba(226,240,150,.85)"/>
+  <g stroke="rgba(20,21,46,.55)" stroke-width="2">
+    <line x1="104" y1="220" x2="104" y2="306"/><line x1="140" y1="220" x2="140" y2="306"/>
+    <line x1="66" y1="250" x2="104" y2="250"/><line x1="66" y1="276" x2="104" y2="276"/>
+    <line x1="140" y1="250" x2="178" y2="250"/><line x1="140" y1="276" x2="178" y2="276"/>
+  </g>
+  <g stroke="#f6f7fb" stroke-width="4" fill="none" stroke-linecap="round"><path d="M214.2 252.7 A16 16 0 0 1 214.2 273.3"/><path d="M224.9 243.7 A30 30 0 0 1 224.9 282.3"/><path d="M235.7 234.7 A44 44 0 0 1 235.7 291.3"/></g>
+  <text x="64" y="440" font-family="Geist Mono,monospace" font-size="40" fill="#f6f7fb" letter-spacing="4">•••• •••• •••• 0119</text>
+  <text x="64" y="508" font-family="Geist Mono,monospace" font-size="17" fill="rgba(246,247,251,.55)" letter-spacing="3">CARDHOLDER</text>
+  <text x="64" y="566" font-family="Geist Mono,monospace" font-size="44" fill="#f6f7fb" letter-spacing="3">YOUR NAME</text>
+  <text x="810" y="508" text-anchor="end" font-family="Geist Mono,monospace" font-size="15" fill="rgba(246,247,251,.55)" letter-spacing="3">VALID THRU</text>
+  <text x="810" y="548" text-anchor="end" font-family="Geist Mono,monospace" font-size="30" fill="#f6f7fb" letter-spacing="3">12/29</text>
+  <circle cx="888" cy="518" r="54" fill="url(#holo)" opacity=".85"/>
+  <polygon points="888.0,488.0 895.9,507.1 916.5,508.7 900.8,522.2 905.6,542.3 888.0,531.5 870.4,542.3 875.2,522.2 859.5,508.7 880.1,507.1" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="3"/>
+</svg></div>
+    <div><a class="cta solid" href="card.html">Reserve the card · skip the invite</a></div>
+    <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
+  </div>
+</div></section>
+
+
+<!-- 6b. карта: живая 3D-сцена + УТП -->
+<section class="slide" data-pose="reach"><div class="handcard" aria-hidden="true"><div class="glasswrap"><svg class="ycard" viewBox="0 0 1000 630" role="img" aria-label="YO:Altgirl card">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".09"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/><stop offset="1" stop-color="#e9e5ff" stop-opacity=".08"/></linearGradient><linearGradient id="shine" x1="0" y1="0" x2=".6" y2=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="holo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4fd6e8"/><stop offset=".3" stop-color="#d1f931"/><stop offset=".55" stop-color="#ff7ad9"/><stop offset=".8" stop-color="#8b6dff"/><stop offset="1" stop-color="#4fd6e8"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1f931"/><stop offset=".5" stop-color="#ff7ad9" stop-opacity=".6"/><stop offset="1" stop-color="#6b57f6"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="cut"><path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#cut)">
+    <rect width="1000" height="630" fill="url(#glass)"/>
+        <polygon points="0,379.5 25,370.9 50,363.1 75,356.4 100,350.8 125,346.4 150,343.3 175,341.4 200,340.7 225,341.2 250,342.7 275,345.1 300,348.2 325,352.0 350,356.1 375,360.3 400,364.5 425,368.4 450,371.8 475,374.6 500,376.5 525,377.4 550,377.2 575,375.8 600,373.2 625,369.3 650,364.2 675,357.9 700,350.6 725,342.4 750,333.3 775,323.7 800,313.6 825,303.4 850,293.2 875,283.2 900,273.7 925,264.8 950,256.8 975,249.7 1000,243.6 1000,299.7 975,305.8 950,313.5 925,322.8 900,333.4 875,344.9 850,357.0 825,369.5 800,381.7 775,393.5 750,404.4 725,414.2 700,422.6 675,429.4 650,434.7 625,438.2 600,440.2 575,440.6 550,439.8 525,437.9 500,435.1 475,431.8 450,428.1 425,424.4 400,420.8 375,417.5 350,414.6 325,412.4 300,410.7 275,409.8 250,409.5 225,410.0 200,411.1 175,412.8 150,415.3 125,418.3 100,422.0 75,426.3 50,431.4 25,437.1 0,443.5" fill="url(#holo)" opacity=".6"/>
+    
+  </g>
+  <path d="M40 0H910L1000 90V590Q1000 630 960 630H40Q0 630 0 590V40Q0 0 40 0Z" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+  <text x="56" y="104" font-family="Geist,Inter,sans-serif" font-weight="800" font-size="74" font-style="italic" fill="#f6f7fb" letter-spacing="-3">yo</text>
+  <text x="890" y="76" text-anchor="end" font-family="Geist Mono,monospace" font-size="22" fill="#f6f7fb" letter-spacing="3">PERSONAL AGENT CARD</text>
+  <text x="890" y="106" text-anchor="end" font-family="Geist Mono,monospace" font-size="18" fill="#d1f931" letter-spacing="3">HOLOGLASS · VIRTUAL</text>
+  <g filter="url(#glow)" stroke="rgba(209,249,49,.75)" stroke-width="2.5" fill="none">
+    <polyline points="178,290 430,290 470,250 700,250"/><circle cx="700" cy="250" r="5" fill="#d1f931"/>
+    <polyline points="178,302 380,302 420,342 610,342"/><circle cx="610" cy="342" r="5" fill="#d1f931"/>
+    <polyline points="122,306 122,352 300,352"/><circle cx="300" cy="352" r="5" fill="#d1f931"/>
+  </g>
+  <rect x="66" y="220" width="112" height="86" rx="14" fill="rgba(226,240,150,.85)"/>
+  <g stroke="rgba(20,21,46,.55)" stroke-width="2">
+    <line x1="104" y1="220" x2="104" y2="306"/><line x1="140" y1="220" x2="140" y2="306"/>
+    <line x1="66" y1="250" x2="104" y2="250"/><line x1="66" y1="276" x2="104" y2="276"/>
+    <line x1="140" y1="250" x2="178" y2="250"/><line x1="140" y1="276" x2="178" y2="276"/>
+  </g>
+  <g stroke="#f6f7fb" stroke-width="4" fill="none" stroke-linecap="round"><path d="M214.2 252.7 A16 16 0 0 1 214.2 273.3"/><path d="M224.9 243.7 A30 30 0 0 1 224.9 282.3"/><path d="M235.7 234.7 A44 44 0 0 1 235.7 291.3"/></g>
+  <text x="64" y="440" font-family="Geist Mono,monospace" font-size="40" fill="#f6f7fb" letter-spacing="4">•••• •••• •••• 0119</text>
+  <text x="64" y="508" font-family="Geist Mono,monospace" font-size="17" fill="rgba(246,247,251,.55)" letter-spacing="3">CARDHOLDER</text>
+  <text x="64" y="566" font-family="Geist Mono,monospace" font-size="44" fill="#f6f7fb" letter-spacing="3">YOUR NAME</text>
+  <text x="810" y="508" text-anchor="end" font-family="Geist Mono,monospace" font-size="15" fill="rgba(246,247,251,.55)" letter-spacing="3">VALID THRU</text>
+  <text x="810" y="548" text-anchor="end" font-family="Geist Mono,monospace" font-size="30" fill="#f6f7fb" letter-spacing="3">12/29</text>
+  <circle cx="888" cy="518" r="54" fill="url(#holo)" opacity=".85"/>
+  <polygon points="888.0,488.0 895.9,507.1 916.5,508.7 900.8,522.2 905.6,542.3 888.0,531.5 870.4,542.3 875.2,522.2 859.5,508.7 880.1,507.1" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="3"/>
+</svg></div></div><div class="wrap">
+  <div class="one usp panel">
+    <p class="mono k dot">The YO card · early Q2 2027</p>
+    <p class="visa">VISA</p>
+    <ul class="ulist">
+      <li><span><b>She pays for you.</b> On limits you set, confirmed with one tap.</span></li>
+      <li><span><b>Works in every city.</b> One card wherever you land. Mastercard and UnionPay next.</span></li>
+    </ul>
+    <div id="join" class="joinbox">
+      <form class="join panel" novalidate>
+        <input type="email" name="contact" id="email" placeholder="your@email.com" autocomplete="email" aria-label="Email" required>
+        <div class="codewrap" hidden><input type="text" name="code" id="code" placeholder="Invite code" autocomplete="off" autocapitalize="characters" aria-label="Invite code"></div>
+        <label class="q mono" id="cityq">Where do you live now?</label>
+        <div class="chips" role="group" aria-labelledby="cityq">
+          <button type="button" class="chip" data-city="danang" aria-pressed="false">Da Nang</button>
+          <button type="button" class="chip" data-city="paris" aria-pressed="false">Paris</button>
+          <button type="button" class="chip" data-city="belgrade" aria-pressed="false">Belgrade</button>
+          <button type="button" class="chip" data-city="cyprus" aria-pressed="false">Cyprus</button>
+          <button type="button" class="chip" data-city="other" aria-pressed="false">Somewhere else</button>
+        </div>
+        <input type="text" name="othercity" id="othercity" placeholder="Which city? Type it here" aria-label="Your city" hidden>
+        <input type="checkbox" id="reserve" name="reserve" checked hidden>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="cta solid" type="submit" id="go">Reserve the card · get in now</button>
+        <p class="fine">Free. The card ships early Q2 2027; Altgirl opens for you today. <button type="button" class="linkbtn" id="havecode">I have an invite code</button></p>
+      </form>
+      <div class="ok panel" role="status">
+        <h3>You’re in ✦</h3>
+        <p class="dim">Check your email: your link to Altgirl is on its way. <span class="okcard" hidden>Your card reservation is saved too.</span></p>
+      </div>
+    </div>
+    <p class="fine">Cards will be issued by a licensed partner. YO:Labs is not a bank.</p>
+  </div>
+</div></section>
+
+<!-- 7. города -->
+<section class="slide" data-pose="squat-full"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">City by city</p>
+    <h2>Next: <span class="hl"><span>your city?</span></span></h2>
+    <div class="citynames"><span>Da Nang</span><span>Paris</span><span>Belgrade</span><span>Cyprus</span><span class="you">+ yours</span></div>
+    <p class="dim">Cities with the most people in line open first.</p>
+  </div>
+</div></section>
+
+<!-- 7b. билдеры -->
+<section class="slide" data-pose="wave-phone"><div class="wrap">
+  <div class="one">
+    <p class="mono k dot">For builders</p>
+    <h2>Built an agent? <span class="hl"><span>We bring the people.</span></span></h2>
+    <p class="dim">Make an agent for your community. Altgirl puts it in front of the people who need it.</p>
+    <div><a class="cta" href="https://yo-landing.fly.dev/#sdk">Build with YO ↗</a></div>
+  </div>
+</div></section>
+
+<!-- 8. вопросы -->
+<section id="faq" data-pose="turn-01"><div class="wrap">
+  <div class="head"><p class="mono k dot">Questions</p><h2>Before you <span class="hl"><span>sign up</span></span></h2></div>
+  <div class="faq">
+    <details open><summary>How do I get in?</summary><p>Altgirl is invite only: you need a code from a friend or a local guide. No code? Reserve the card. It’s free, and you get Altgirl right away.</p></details>
+    <details><summary>What does it cost?</summary><p>Getting in line and reserving the card are free today. Card pricing comes before launch, and you can change your mind at any time.</p></details>
+    <details><summary>When can I use it?</summary><p>Our first testers start on November 24 through partner communities. After that, by invite. Card reservers get in right away.</p></details>
+    <details><summary>What can she do today?</summary><p>On November 24: a game at your club and the ride to it, your day pinned in one place. More scenarios ship every week. Anything not live yet is marked “in build”.</p></details>
+    <details><summary>What happens to my data?</summary><p>Your Altgirl is separate from everyone else’s. What she learns is kept on your phone where possible. We don’t sell it.</p></details>
+    <details><summary>Is the card a bank card?</summary><p>The card will be issued by licensed partners. YO:Labs is not a bank. Networks, fees and countries come before launch.</p></details>
+    <details><summary>Can I bring Altgirl to my city?</summary><p>Yes. Pick “Somewhere else” in the form and tell us your city. If you want to help open it, say so in the reply to our first email.</p></details>
+  </div>
+</div></section>
+
+<!-- 9. финал -->
+<section class="final slide" data-pose="squat"><div class="wrap">
+  <h2>Less apps, <span class="hl"><span>more life.</span></span></h2>
+  <a class="cta solid" href="#join">Get in line</a>
+</div></section>
+
+<footer><div class="wrap">
+  <p class="mono faint">YO:Labs © 2026 · Less apps, more life.</p>
+  <p class="fine">YO:Labs is a lab building agents, reputation and payments that work together. Altgirl is our first product. <a href="https://x.com/yo_altgirl">X</a> · <a href="https://t.me/yo_altgirl">Telegram</a></p>
+  <p class="fine">Cards will be issued by licensed partners. YO:Labs is not a bank.</p>
+</div></footer>
+
+<div class="sticky" id="sticky"><a class="cta solid" href="#join">Get in line</a></div>
+<script>
+/* Заявки уходят на server.py (/api/waitlist): SQLite + Telegram + письмо. Пусто — сохраняются в браузере (демо). */
+const FORM_ENDPOINT = "";
+(function(){
+  var f=document.querySelector('form.join'),city='',other=document.getElementById('othercity');
+  var ref=(new URLSearchParams(location.search).get('ref')||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'').slice(0,12);
+  f.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){
+    f.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed','false')});
+    c.setAttribute('aria-pressed','true');city=c.dataset.city;other.hidden=city!=='other';if(city==='other')other.focus();});});
+  document.querySelectorAll('[data-reserve]').forEach(function(a){a.addEventListener('click',function(){document.getElementById('reserve').checked=true;setTimeout(function(){document.getElementById('email').focus({preventScroll:true})},400)})});
+  document.getElementById('havecode').addEventListener('click',function(){var w=f.querySelector('.codewrap'),r=document.getElementById('reserve'),b=document.getElementById('go');w.hidden=!w.hidden;r.checked=w.hidden;b.textContent=w.hidden?'Reserve the card · get in now':'Get in with my code';this.textContent=w.hidden?'I have an invite code':'No code? Reserve the card instead';if(!w.hidden)document.getElementById('code').focus()});
+  if(ref){document.getElementById('havecode').click();document.getElementById('code').value=ref}
+  f.addEventListener('submit',function(e){e.preventDefault();
+    var c=f.querySelector('[name=contact]'),v=c.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){c.classList.add('err');c.focus();return}c.classList.remove('err');
+    var cv=city==='other'?('o:'+other.value.trim().toLowerCase().replace(/[^a-zÀ-ɏ -]/g,'').slice(0,14)):city;
+    var reserve=document.getElementById('reserve').checked;
+    var code=(document.getElementById('code').value||ref).toUpperCase().replace(/[^A-Z0-9_-]/g,'').slice(0,12);
+    var page=('altgirl|'+(cv||'-')+(reserve?'|card':'')+(code?'|ref:'+code:'')).slice(0,40);
+    var data={contact:v,role:'user',page:page,ts:new Date().toISOString(),website:f.querySelector('[name=website]').value};
+    var done=function(){f.style.display='none';var ok=document.querySelector('.ok');ok.classList.add('show');if(reserve)ok.querySelector('.okcard').hidden=false};
+    var fail=function(){c.classList.add('err');c.focus()};
+    if(FORM_ENDPOINT){fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){r.ok?done():fail()},fail)}
+    else{try{var a=JSON.parse(localStorage.getItem('yo_leads')||'[]');a.push(data);localStorage.setItem('yo_leads',JSON.stringify(a))}catch(_){}done()}
+  });
+  var s=document.getElementById('sticky'),j=document.getElementById('join');
+  if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(x){s.classList.toggle('on',!x.isIntersecting&&x.boundingClientRect.top<0)})}).observe(j)}
+})();
+</script><script>
+/* смена позы по экранам: прелоад, поворот из трёх кадров, затем поза секции */
+(function(){
+  var A='assets/poses-trim/',F={'wave-phone':1,'turn-01':1,'turn-03':1,'turn-04':1,'run':.9,'sit':.8,'squat':.6,'squat-full':.62,'padel':.62,'phone':.62,'reach':.46},CUT={padel:1,phone:1,reach:1},img=document.getElementById('pose'),cur='phone',busy=0,want=null;
+  function size(n){var m=innerWidth<1000;img.style.setProperty('--h',m?'62vw':'90vh');img.style.setProperty('--mb','0');img.style.maxWidth=n==='reach'?(m?'60vw':'46vw'):(m?'40vw':'38vw')}size('phone');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,SPIN=['turn-03','turn-04','turn-01'];
+  var all=SPIN.concat([].map.call(document.querySelectorAll('[data-pose]'),function(s){return s.dataset.pose}).filter(function(n){return n!=='none'}));
+  all.forEach(function(n){var i=new Image();i.src=A+n+'.webp'});
+  function go(n){var M=document.querySelector('.mascot');M.classList.toggle('off',n==='none');if(n==='none')return;if(n===cur)return;if(busy){want=n;return}cur=n;
+    if(reduce){img.src=A+n+'.webp';size(n);return}
+    busy=1;var k=0;(function step(){if(k<SPIN.length){var sp=SPIN[k++];img.src=A+sp+'.webp';size(sp);setTimeout(step,70)}else{img.src=A+n+'.webp';size(n);img.classList.remove('pop');void img.offsetWidth;img.classList.add('pop');busy=0;if(want&&want!==cur){var w=want;want=null;go(w)}}})();}
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)go(e.target.dataset.pose)})},{rootMargin:'-45% 0px -45% 0px'});
+    document.querySelectorAll('[data-pose]').forEach(function(s){io.observe(s)})}
+})();
+</script>
+<script>
+/* сообщения в макете появляются по очереди, когда слайд на экране */
+(function(){var p=document.querySelector('.phone');if(!p)return;var ms=p.querySelectorAll('.m');ms.forEach(function(m,i){m.style.transitionDelay=(i*0.45)+'s'});
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)p.classList.add('go')})},{threshold:.4}).observe(p)}else p.classList.add('go')})();
+</script>
+<script>
+/* заголовки собираются из символов, когда слайд появляется (как у Сергея) */
+(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+ var chars='!<>-_/[]{}=+*^?#01✦';
+ function scr(el){if(el.dataset.done)return;el.dataset.done=1;var nodes=[];(function walk(n){n.childNodes.forEach(function(c){if(c.nodeType===3&&c.textContent.trim())nodes.push({n:c,t:c.textContent});else if(c.nodeType===1)walk(c)})})(el);
+  var f=0,T=22;(function tick(){f++;nodes.forEach(function(o){var k=Math.floor(o.t.length*f/T);o.n.textContent=o.t.slice(0,k)+o.t.slice(k).replace(/\S/g,function(){return chars[Math.random()*chars.length|0]})});if(f<T)requestAnimationFrame(tick);else nodes.forEach(function(o){o.n.textContent=o.t})})()}
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){scr(e.target);io.unobserve(e.target)}})},{rootMargin:'-20% 0px -20% 0px'});
+ document.querySelectorAll('section h2').forEach(function(h){io.observe(h)})})();
+</script>
+<script>
+/* карта у ладони: видна, пока на экране слайд с предзаказом */
+(function(){var h=document.querySelector('.handcard');if(!h||!('IntersectionObserver' in window))return;var sec=h.closest('section');
+ new IntersectionObserver(function(es){es.forEach(function(e){h.classList.toggle('on',e.isIntersecting)})},{rootMargin:'-40% 0px -40% 0px'}).observe(sec)})();
+</script>
+</body>
+</html>
