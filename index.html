@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YO:Altgirl · Less apps, more life.</title>
 <meta name="description" content="One chat for your life in any city. Tell Altgirl what you need: the right local agent joins, gets it done and leaves. Get in line for the app and the card.">
@@ -363,6 +365,9 @@ section[id],[id]{scroll-margin-top:4.5rem}
 }
 .chatnote{max-width:24rem}
 #nodes{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
+/* фирменное лого в шапке */
+header .logo{height:3.5rem;width:auto;display:block}
+@media(max-width:700px){header .logo{height:2.4rem}}
 </style>
 <!-- PostHog: pageviews only on yo.finance (no autocapture, no recordings); URLs are sent without query and hash. -->
 <script>
@@ -396,7 +401,7 @@ section[id],[id]{scroll-margin-top:4.5rem}
 </div>
 
 <header><div class="wrap">
-  <a href="#top" aria-label="YO:Altgirl"><span class="mark"></span></a>
+  <a class="brand" href="#top" aria-label="YO:Altgirl"><img class="logo" src="assets/logo-altgirl.png" alt="YO:Altgirl" width="116" height="100"></a>
   <nav class="fam" aria-label="YO family"><b>YO</b><a href="https://yomarina.github.io/yo-labs-site/">Labs</a><a href="https://yomarina.github.io/altgirl-site/" class="on" aria-current="page">Altgirl</a></nav>
   <nav class="mono"><a href="#chat">One chat</a><a href="#card">Card</a><a href="#faq">FAQ</a></nav>
   <a class="cta" href="#join">:: Get in</a>
