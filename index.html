@@ -244,6 +244,10 @@ section,footer{position:relative;z-index:2}
 .m.card i svg{width:1rem;height:1rem}
 .m.card b{display:block;font-size:.82rem;font-weight:650}
 .m.card span{font-size:.68rem;color:#6b6b85}
+.m.card.done>div{flex:1}
+.m.card.done em{flex:none;width:1.35rem;height:1.35rem;border-radius:50%;background:#d1f931;color:#14153f;display:grid;place-items:center;font:700 .7rem/1 var(--sans);font-style:normal}
+.phone.short{aspect-ratio:auto}
+.phone.short .thread{padding-bottom:1.1rem}
 .pin{margin:.5rem .7rem .9rem;background:#fff;border-radius:999px;padding:.35rem;display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:#9a9ab0;box-shadow:0 4px 14px rgba(20,21,46,.08)}
 .pin span{flex:1}
 .pin i{flex:none;width:1.8rem;height:1.8rem;border-radius:50%;display:grid;place-items:center;font-style:normal}
@@ -358,10 +362,10 @@ body{padding-top:5.2rem}
 section[id],[id]{scroll-margin-top:5.8rem}
 /* слайд «Say it once»: текст слева, телефон рядом по центру экрана, а не стопкой в углу */
 @media(min-width:1000px){
-  #chat .one{max-width:min(54vw,54rem);grid-template-columns:minmax(0,1fr) auto;grid-template-rows:1fr auto auto auto 1fr;column-gap:clamp(2rem,3.5vw,4rem);row-gap:1.2rem;align-items:start}
-  #chat .one>.k{grid-column:1;grid-row:2}#chat .one>h2{grid-column:1;grid-row:3}#chat .one>.chatnote{grid-column:1;grid-row:4}
-  #chat .one>.duo{grid-column:2;grid-row:1 / -1;align-self:center}
-  #chat .phone{width:clamp(17rem,21vw,21rem);margin-top:0}
+  #chat .one,#errands .one{max-width:min(54vw,54rem);grid-template-columns:minmax(0,1fr) auto;grid-template-rows:1fr auto auto auto 1fr;column-gap:clamp(2rem,3.5vw,4rem);row-gap:1.2rem;align-items:start}
+  :is(#chat,#errands) .one>.k{grid-column:1;grid-row:2}:is(#chat,#errands) .one>h2{grid-column:1;grid-row:3}:is(#chat,#errands) .one>.chatnote{grid-column:1;grid-row:4}
+  :is(#chat,#errands) .one>.duo{grid-column:2;grid-row:1 / -1;align-self:center}
+  :is(#chat,#errands) .phone{width:clamp(17rem,21vw,21rem);margin-top:0}
 }
 .chatnote{max-width:24rem}
 #nodes{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
@@ -525,12 +529,27 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 </div></section>
 
 <!-- 3d. дела в городе: три плитки, одна строка -->
-<section class="slide" data-pose="wave-phone"><div class="wrap">
+<section class="slide" id="errands" data-pose="wave-phone"><div class="wrap">
   <div class="one">
     <p class="mono k dot">Real life, handled</p>
     <h2>Dinner, taxi, visa run. <span class="hl"><span>You name it, it’s done.</span></span></h2>
-    <img class="steps-shot" src="assets/app-3steps.webp" alt="One message to Altgirl: padel court, taxi there and back and dinner after the game, all done in three steps" width="740" height="1126" loading="lazy">
-    <p class="fine">Padel and rides are live. Food and visa runs are coming.</p>
+    <div class="duo">
+    <div class="phone short" aria-label="Altgirl app: one message books padel, two taxis and dinner, four steps done">
+      <div class="scr">
+        <div class="ptop"><img src="assets/app-avatar.webp" alt=""><span class="sp"></span></div>
+        <div class="thread">
+          <p class="m me">Padel tomorrow at 18:30, a taxi there and back, then food to my place</p>
+          <p class="m her">on it: court, rides both ways, dinner after the game</p>
+          <p class="m stp">4 steps done <b>›</b></p>
+          <div class="m card done"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.5 6.5c3 2.5 3 8.5 0 11M18.5 6.5c-3 2.5-3 8.5 0 11"/></svg></i><div><b>Padel court booked</b><span>Tomorrow, 18:30–19:30</span></div><em>✓</em></div>
+          <div class="m card done"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V12l2-5h10l2 5v4"/><path d="M4 16h16M7.5 19v-3M16.5 19v-3"/><circle cx="8" cy="13" r=".6"/><circle cx="16" cy="13" r=".6"/></svg></i><div><b>Taxi to the court</b><span>Pickup at 18:00</span></div><em>✓</em></div>
+          <div class="m card done"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8a8 8 0 0 0-14.5-2M4 4v3h3"/><path d="M4 16a8 8 0 0 0 14.5 2M20 20v-3h-3"/><path d="M9 13.5V12l1-2h4l1 2v1.5H9z"/></svg></i><div><b>Taxi back home</b><span>Pickup at 19:45</span></div><em>✓</em></div>
+          <div class="m card done"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M9 8c0-1.5 1-1.5 1-3M13 8c0-1.5 1-1.5 1-3"/></svg></i><div><b>Food order placed</b><span>To your apartment, ~20:00</span></div><em>✓</em></div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <p class="fine chatnote">Padel and rides are live. Food and visa runs are coming.</p>
   </div>
 </div></section>
 
@@ -656,7 +675,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 </div></section>
 
 <!-- 9. финал -->
-<section class="final slide" data-pose="squat"><div class="wrap">
+<section class="final slide" data-pose="squat-full"><div class="wrap">
   <h2>Less apps, <span class="hl"><span>more life.</span></span></h2>
   <a class="cta solid" href="#join">Get in</a>
 </div></section>
@@ -714,8 +733,8 @@ const FORM_ENDPOINT = "";
 </script>
 <script>
 /* сообщения в макете появляются по очереди, когда слайд на экране */
-(function(){var p=document.querySelector('.phone');if(!p)return;var ms=p.querySelectorAll('.m');ms.forEach(function(m,i){m.style.transitionDelay=(i*0.45)+'s'});
- if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)p.classList.add('go')})},{threshold:.4}).observe(p)}else p.classList.add('go')})();
+document.querySelectorAll('.phone').forEach(function(p){var ms=p.querySelectorAll('.m');ms.forEach(function(m,i){m.style.transitionDelay=(i*0.45)+'s'});
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)p.classList.add('go')})},{threshold:.4}).observe(p)}else p.classList.add('go')});
 </script>
 <script>
 /* заголовки собираются из символов, когда слайд появляется (как у Сергея) */
