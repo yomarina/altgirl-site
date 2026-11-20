@@ -644,7 +644,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 </div></section>
 
 <!-- 7. города -->
-<section class="slide" data-pose="squat-full"><div class="wrap">
+<section class="slide" data-pose="squat-neon"><div class="wrap">
   <div class="one">
     <p class="mono k dot">City by city</p>
     <h2>Next: <span class="hl"><span>your city?</span></span></h2>
@@ -675,7 +675,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 </div></section>
 
 <!-- 9. финал -->
-<section class="final slide" data-pose="squat-full"><div class="wrap">
+<section class="final slide" data-pose="squat-neon"><div class="wrap">
   <h2>Less apps, <span class="hl"><span>more life.</span></span></h2>
   <a class="cta solid" href="#join">Get in</a>
 </div></section>
@@ -719,7 +719,7 @@ const FORM_ENDPOINT = "";
 </script><script>
 /* смена позы по экранам: прелоад, поворот из трёх кадров, затем поза секции */
 (function(){if(matchMedia('(max-width:760px)').matches)return;
-  var A='assets/poses-trim/',F={'wave-phone':1,'turn-01':1,'turn-03':1,'turn-04':1,'run':.9,'sit':.8,'squat':.6,'squat-full':.62,'padel':.62,'phone':.62,'reach':.46},CUT={padel:1,phone:1,reach:1},img=document.getElementById('pose'),cur='phone',busy=0,want=null;
+  var A='assets/poses-trim/',F={'wave-phone':1,'turn-01':1,'turn-03':1,'turn-04':1,'run':.9,'sit':.8,'squat':.6,'squat-full':.62,'squat-neon':.62,'padel':.62,'phone':.62,'reach':.46},CUT={padel:1,phone:1,reach:1},img=document.getElementById('pose'),cur='phone',busy=0,want=null;
   function size(n){var m=innerWidth<1000;img.style.setProperty('--h',m?'62vw':'90vh');img.style.setProperty('--mb','0');img.style.maxWidth=n==='reach'?(m?'60vw':'46vw'):(m?'40vw':'38vw')}size('phone');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,SPIN=['turn-03','turn-04','turn-01'];
   var all=SPIN.concat([].map.call(document.querySelectorAll('[data-pose]'),function(s){return s.dataset.pose}).filter(function(n){return n!=='none'}));
