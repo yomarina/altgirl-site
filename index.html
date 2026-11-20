@@ -128,7 +128,7 @@ header nav a{color:var(--dim)} header nav a:hover{color:var(--lime)}
 .cardsec .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
 .cardsec ul{list-style:none;display:grid;gap:.85rem}
 .cardsec li{display:grid;grid-template-columns:1.2rem 1fr;gap:.6rem}
-.cardsec li:before{content:"✦";color:var(--lime)}
+.cardsec li:before{content:"";flex:none;width:.45rem;height:.45rem;margin-top:.5em;background:var(--lime)}
 .cardvis{position:relative;min-height:26rem}
 .plastic{position:absolute;left:0;bottom:2rem;width:min(22rem,80%);aspect-ratio:1.586;border-radius:1.1rem;background:linear-gradient(135deg,#22236a,#5b45f0 55%,#d1f931);box-shadow:0 30px 60px rgba(0,0,0,.45);transform:rotate(-8deg)}
 .plastic .lg{position:absolute;left:1.2rem;top:1rem;width:3rem;height:1.9rem;background:#fff;-webkit-mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat;mask:url(assets/yo-labs-logo.webp) left center/contain no-repeat}
@@ -175,6 +175,11 @@ section,footer{position:relative;z-index:2}
   .hero-pic .bub.a{position:static}
   .cardsec .wrap{grid-template-columns:1fr 1fr}
   .final .wrap{justify-items:start;text-align:left}
+  /* через слайд Альтуха уходит влево, текст вправо: не один и тот же кадр на каждом экране */
+  section[data-side=l] .wrap{margin-left:0;padding-left:calc(33vw + 1rem);padding-right:max(2rem,calc((100vw - 82rem)/2))}
+  section[data-side=l] .one{margin-left:auto}
+  .mascot{transition:transform .8s cubic-bezier(.22,1,.36,1),opacity .4s}
+  .mascot.left{transform:translateX(calc(38vw + 4vw - 100vw)) scaleX(-1)}
 }
 @media(max-width:999px){
   .mascot{width:34vw;height:46vw;right:0;bottom:calc(4.2rem + env(safe-area-inset-bottom));opacity:.97}
@@ -294,7 +299,10 @@ h1 .box{display:inline-block;padding:.02em .18em .06em;border:1.5px solid var(--
 .visa{font:800 italic clamp(3.5rem,7vw,6rem)/.9 var(--sans);letter-spacing:-.03em;color:var(--ink);-webkit-text-stroke:0}
 .ulist{list-style:none;display:grid;gap:.75rem}
 .ulist li{display:flex;gap:.5rem;align-items:flex-start;color:var(--dim)}
-.ulist li:before{content:"✦";color:var(--lime)}
+.ulist li:before{content:"";flex:none;width:.45rem;height:.45rem;margin-top:.5em;background:var(--lime)}
+.tlink{display:inline-flex;align-items:center;height:3rem;font:500 var(--s)/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--ink);text-decoration:underline;text-decoration-color:var(--lime);text-decoration-thickness:2px;text-underline-offset:.45em;transition:color .3s}
+.tlink:hover{color:var(--lime)}
+
 .ulist b{color:var(--ink);font-weight:600}
 .mascot{transition:opacity .4s}
 .mascot.off{opacity:0}
@@ -471,12 +479,12 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
     
     <p class="lead"><b>One chat for life in a new city.</b> She books the court, calls the ride and remembers the rest.</p>
     <p class="lead" style="font-size:1rem">Invite only. No code? Leave your email and get in today.</p>
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap"><a class="cta solid" href="#card">Get in ↓</a><a class="cta" href="#chat">See how it works</a></div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap"><a class="cta solid" href="#card">Get in ↓</a><a class="tlink" href="#chat">See how it works</a></div>
   </div>
 </div></section>
 
 <!-- 4. не замена ChatGPT -->
-<section class="slide" data-pose="turn-01"><div class="wrap">
+<section class="slide" data-pose="turn-01" data-side="l"><div class="wrap">
   <div class="one">
 
     <h2>ChatGPT for work. <span class="hl"><span>Altgirl for life.</span></span></h2>
@@ -555,7 +563,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 
 
 <!-- 5. приватность -->
-<section class="slide" data-pose="sit"><div class="wrap">
+<section class="slide" data-pose="sit" data-side="l"><div class="wrap">
   <div class="one">
 
     <h2>She learns from you. <span class="hl"><span>Only you.</span></span></h2>
@@ -635,7 +643,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
         <p class="fine">Free. Reserves your card too. <button type="button" class="linkbtn" id="havecode">I have an invite code</button></p>
       </form>
       <div class="ok panel" role="status">
-        <h3>You’re in ✦</h3>
+        <h3>You’re in.</h3>
         <p class="dim">Check your email: your link to Altgirl is on its way. <span class="okcard" hidden>Your card reservation is saved too.</span></p>
       </div>
     </div>
@@ -654,7 +662,7 @@ footer .flogo{height:6.5rem;width:auto;display:block;flex-basis:100%;max-width:m
 </div></section>
 
 <!-- 7b. билдеры -->
-<section class="slide" data-pose="wave-phone"><div class="wrap">
+<section class="slide" data-pose="wave-phone" data-side="l"><div class="wrap">
   <div class="one">
 
     <h2>Built an agent? <span class="hl"><span>We bring the people.</span></span></h2>
@@ -727,7 +735,7 @@ const FORM_ENDPOINT = "";
   function go(n){var M=document.querySelector('.mascot');M.classList.toggle('off',n==='none');if(n==='none')return;if(n===cur)return;if(busy){want=n;return}cur=n;
     if(reduce){img.src=A+n+'.webp';size(n);return}
     busy=1;var k=0;(function step(){if(k<SPIN.length){var sp=SPIN[k++];img.src=A+sp+'.webp';size(sp);setTimeout(step,70)}else{img.src=A+n+'.webp';size(n);img.classList.remove('pop');void img.offsetWidth;img.classList.add('pop');busy=0;if(want&&want!==cur){var w=want;want=null;go(w)}}})();}
-  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)go(e.target.dataset.pose)})},{rootMargin:'-45% 0px -45% 0px'});
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){document.querySelector('.mascot').classList.toggle('left',e.target.dataset.side==='l');go(e.target.dataset.pose)}})},{rootMargin:'-45% 0px -45% 0px'});
     document.querySelectorAll('[data-pose]').forEach(function(s){io.observe(s)})}
 })();
 </script>
@@ -743,7 +751,7 @@ document.querySelectorAll('.phone').forEach(function(p){var ms=p.querySelectorAl
  function scr(el){if(el.dataset.done)return;el.dataset.done=1;var nodes=[];(function walk(n){n.childNodes.forEach(function(c){if(c.nodeType===3&&c.textContent.trim())nodes.push({n:c,t:c.textContent});else if(c.nodeType===1)walk(c)})})(el);
   var f=0,T=22;(function tick(){f++;nodes.forEach(function(o){var k=Math.floor(o.t.length*f/T);o.n.textContent=o.t.slice(0,k)+o.t.slice(k).replace(/\S/g,function(){return chars[Math.random()*chars.length|0]})});if(f<T)requestAnimationFrame(tick);else nodes.forEach(function(o){o.n.textContent=o.t})})()}
  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){scr(e.target);io.unobserve(e.target)}})},{rootMargin:'-20% 0px -20% 0px'});
- document.querySelectorAll('section h2').forEach(function(h){io.observe(h)})})();
+ document.querySelectorAll('.hero h1').forEach(function(h){io.observe(h)})})();
 </script>
 <script>
 /* карта у ладони: видна, пока на экране слайд с предзаказом */
